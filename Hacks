@@ -1,6 +1,5 @@
-local player = game.Players.LocalPlayer
-local character = player.Character or player.CharacterAdded:Wait()
-local humanoid = character:WaitForChild("Humanoid")
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
 
 local screenGui = Instance.new("ScreenGui")
 screenGui.Name = "SpeedControlGui"
@@ -39,26 +38,65 @@ highButton.FontFace.Weight = Enum.FontWeight.Bold
 highButton.Parent = background
 highButton.BackgroundColor3 = Color3.fromRGB(210, 46, 255)
 
-local highlight = Instance.new("Highlight")
-highlight.FillColor = Color3.fromRGB(255, 0, 0)
-highlight.OutlineColor = Color3.fromRGB(255, 255, 255)
-highlight.Adornee = character
+local humanoid = player.Character and player.Character:FindFirstChild("Humanoid")
+if not humanoid then
+	local character = player.Character or player.CharacterAdded:Wait()
+	humanoid = character:WaitForChild("Humanoid")
+end
 
 local highlighting = false
+local highlights = {}
+
+local function addHighlightToCharacter(char)
+	if not char then return end
+	if highlights[char] then return end -- already highlighted
+	
+	local hl = Instance.new("Highlight")
+	hl.FillColor = Color3.fromRGB(255, 0, 0)
+	hl.OutlineColor = Color3.fromRGB(255, 255, 255)
+	hl.Adornee = char
+	hl.Parent = char
+	highlights[char] = hl
+end
+
+local function removeHighlights()
+	for char, hl in pairs(highlights) do
+		if hl then
+			hl:Destroy()
+		end
+	end
+	highlights = {}
+end
+
+local function highlightAllPlayers()
+	for _, plr in pairs(Players:GetPlayers()) do
+		if plr ~= player then
+			local char = plr.Character
+			if char then
+				addHighlightToCharacter(char)
+			end
+			-- Also connect to CharacterAdded to highlight if they respawn
+			plr.CharacterAdded:Connect(function(newChar)
+				if highlighting then
+					addHighlightToCharacter(newChar)
+				end
+			end)
+		end
+	end
+end
 
 highButton.MouseButton1Click:Connect(function()
 	if highlighting then
-		highlight.Parent = nil
+		removeHighlights()
 		highButton.Text = "Highlight players"
 		highlighting = false
 	else
-		highlight.Parent = character
+		highlightAllPlayers()
 		highButton.Text = "Disable Highlight"
 		highlighting = true
 	end
 end)
 
--- Loop that runs every 1 second while highlighting is true
 spawn(function()
 	while true do
 		if highlighting then
@@ -67,6 +105,7 @@ spawn(function()
 		wait(1)
 	end
 end)
+
 speedButton.MouseButton1Click:Connect(function()
 	humanoid.WalkSpeed = humanoid.WalkSpeed + 10
 end)
