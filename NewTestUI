@@ -5,20 +5,20 @@ screenGui.Name = "SpeedControlGui"
 screenGui.Parent = player:WaitForChild("PlayerGui")
 
 local background = Instance.new("Frame")
-background.Size = UDim2.new(0, 300, 0, 200)
-background.Position = UDim2.new(0.083, 0, 0.193, 0)
+background.Size = UDim2.new(0.3, 0, 0.25, 0)        -- 30% width, 25% height of screen
+background.Position = UDim2.new(0.08, 0, 0.19, 0)   -- 8% from left, 19% from top
 background.BackgroundColor3 = Color3.fromRGB(92, 255, 144)
 background.BorderSizePixel = 2
 background.Parent = screenGui
 
 local speedButton = Instance.new("TextButton")
-speedButton.Size = UDim2.new(0, 200, 0, 50)
-speedButton.Position = UDim2.new(0, 50, 0, 30)
+speedButton.Size = UDim2.new(0.66, 0, 0.2, 0)       -- ~66% width, 20% height of background frame
+speedButton.Position = UDim2.new(0.17, 0, 0.15, 0)   -- position inside the background frame
 speedButton.Text = "Increase Speed"
 speedButton.Parent = background
 
 local resetButton = Instance.new("TextButton")
-resetButton.Size = UDim2.new(0, 200, 0, 50)
-resetButton.Position = UDim2.new(0, 50, 0, 100)
+resetButton.Size = UDim2.new(0.66, 0, 0.2, 0)       -- same size as speedButton
+resetButton.Position = UDim2.new(0.17, 0, 0.55, 0)   -- positioned below the speedButton
 resetButton.Text = "Reset Speed"
 resetButton.Parent = background
