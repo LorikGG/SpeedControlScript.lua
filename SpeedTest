@@ -1,45 +1,43 @@
--- SpeedControlScript.lua
-
 local player = game.Players.LocalPlayer
 local character = player.Character or player.CharacterAdded:Wait()
-character:WaitForChild("Humanoid")
+
+local function getHumanoid()
+	character = player.Character or player.CharacterAdded:Wait()
+	return character:WaitForChild("Humanoid")
+end
 
 local function increaseWalkSpeed()
-	local humanoid = character:WaitForChild("Humanoid")
+	local humanoid = getHumanoid()
 	humanoid.WalkSpeed = humanoid.WalkSpeed + 10
-end 
+end
 
 local function resetWalkSpeed()
-	local humanoid = character:WaitForChild("Humanoid")
+	local humanoid = getHumanoid()
 	humanoid.WalkSpeed = 16
 end
 
--- Create the ScreenGui
+-- GUI
 local screenGui = Instance.new("ScreenGui")
 screenGui.Name = "SpeedControlGui"
 screenGui.Parent = player:WaitForChild("PlayerGui")
 
-
 local background = Instance.new("Frame")
-background.Size = UDim2.new(0.226, 0,0.384, 0)
-background.Position = UDim2.new(0.046, 0,0.078, 0)
+background.Size = UDim2.new(0, 300, 0, 200)
+background.Position = UDim2.new(0.083, 0,0.193, 0)
 background.BackgroundColor3 = Color3.fromRGB(92, 255, 144)
 background.BorderSizePixel = 2
 background.Parent = screenGui
--- Create the Increase Speed Button
+
 local speedButton = Instance.new("TextButton")
 speedButton.Size = UDim2.new(0, 200, 0, 50)
-speedButton.Position = UDim2.new(0, 100, 0, 100)
+speedButton.Position = UDim2.new(0, 50, 0, 30)
 speedButton.Text = "Increase Speed"
-speedButton.Parent = screenGui
-
+speedButton.Parent = background
 speedButton.MouseButton1Click:Connect(increaseWalkSpeed)
 
--- Create the Reset Speed Button
 local resetButton = Instance.new("TextButton")
 resetButton.Size = UDim2.new(0, 200, 0, 50)
-resetButton.Position = UDim2.new(0, 100, 0, 200)
+resetButton.Position = UDim2.new(0, 50, 0, 100)
 resetButton.Text = "Reset Speed"
-resetButton.Parent = screenGui
-
+resetButton.Parent = background
 resetButton.MouseButton1Click:Connect(resetWalkSpeed)
