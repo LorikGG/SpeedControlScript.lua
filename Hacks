@@ -5,52 +5,93 @@ local screenGui = Instance.new("ScreenGui")
 screenGui.Name = "SpeedControlGui"
 screenGui.Parent = player:WaitForChild("PlayerGui")
 
+local container = Instance.new("Frame")
+container.Size = UDim2.new(0.4, 0, 0.5, 0)
+container.Position = UDim2.new(0.1, 0, 0.1, 0)
+container.BackgroundTransparency = 1
+container.Parent = screenGui
+
+-- Draggable bar (top 10%)
+local draggableBar = Instance.new("Frame")
+draggableBar.Name = "DraggableBar"
+draggableBar.Size = UDim2.new(1, 0, 0.1, 0)
+draggableBar.Position = UDim2.new(0, 0, 0, 0)
+draggableBar.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
+draggableBar.Parent = container
+
+-- Close button inside draggable bar
+local closeButton = Instance.new("TextButton")
+closeButton.Size = UDim2.new(0.1, 0, 1, 0)
+closeButton.Position = UDim2.new(0.9, 0, 0, 0)
+closeButton.Text = "X"
+closeButton.TextScaled = true
+closeButton.BackgroundColor3 = Color3.fromRGB(255, 0, 4)
+closeButton.Parent = draggableBar
+
+-- Background frame holds buttons and inputs (90% below draggable bar)
 local background = Instance.new("Frame")
-background.Size = UDim2.new(0.387, 0, 0.472, 0)
-background.Position = UDim2.new(0.076, 0, 0.125, 0)
+background.Size = UDim2.new(1, 0, 0.9, 0)
+background.Position = UDim2.new(0, 0, 0.1, 0)
 background.BackgroundColor3 = Color3.fromRGB(92, 255, 144)
 background.BorderSizePixel = 2
 background.BackgroundTransparency = 0.33
-background.Parent = screenGui
+background.Parent = container
 
+-- Jumpboost TextBox
+local jumpboostBox = Instance.new("TextBox")
+jumpboostBox.Size = UDim2.new(0.4, 0,0.249, 0)
+jumpboostBox.Position = UDim2.new(0.07, 0, 0.35, 0)
+jumpboostBox.BackgroundColor3 = Color3.fromRGB(47, 85, 255)
+jumpboostBox.Text = "normal jump is 7.2"
+jumpboostBox.FontFace.Weight = Enum.FontWeight.Bold
+jumpboostBox.BorderSizePixel = 2
+jumpboostBox.TextScaled = true
+jumpboostBox.Parent = background
+
+-- Increase Speed Button
 local speedButton = Instance.new("TextButton")
-speedButton.Size = UDim2.new(0.407, 0, 0.179, 0)
-speedButton.Position = UDim2.new(0.041, 0, 0.737, 0)
+speedButton.Size = UDim2.new(0.4, 0,0.249, 0)
+speedButton.Position = UDim2.new(0.075, 0, 0.7, 0)
 speedButton.Text = "Increase Speed"
 speedButton.TextScaled = true
-speedButton.Parent = background
 speedButton.BackgroundColor3 = Color3.fromRGB(75, 231, 255)
+speedButton.Parent = background
 
+-- Reset Speed Button
 local resetButton = Instance.new("TextButton")
-resetButton.Size = UDim2.new(0.407, 0, 0.179, 0)
-resetButton.Position = UDim2.new(0.53, 0, 0.737, 0)
-resetButton.Text = "Reset Speed"
+resetButton.Size = UDim2.new(0.4, 0,0.249, 0)
+resetButton.Position = UDim2.new(0.53, 0, 0.7, 0)
+resetButton.Text = "Reset Speed/jump height"
 resetButton.TextScaled = true
-resetButton.Parent = background
 resetButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+resetButton.Parent = background
 
+-- Highlight players Button
 local highButton = Instance.new("TextButton")
-highButton.Size = UDim2.new(0.407, 0, 0.179, 0)
-highButton.Position = UDim2.new(0.31, 0, 0.357, 0)
+highButton.Size = UDim2.new(0.4, 0,0.249, 0)
+highButton.Position = UDim2.new(0.53, 0, 0.35, 0)
 highButton.Text = "Highlight players"
 highButton.TextScaled = true
 highButton.FontFace.Weight = Enum.FontWeight.Bold
-highButton.Parent = background
 highButton.BackgroundColor3 = Color3.fromRGB(210, 46, 255)
+highButton.Parent = background
 
-local humanoid = player.Character and player.Character:FindFirstChild("Humanoid")
-if not humanoid then
-	local character = player.Character or player.CharacterAdded:Wait()
-	humanoid = character:WaitForChild("Humanoid")
+-- Humanoid reference
+local function getHumanoid()
+	local char = player.Character or player.CharacterAdded:Wait()
+	return char:WaitForChild("Humanoid")
 end
 
+local humanoid = getHumanoid()
+
+-- Highlighting logic
 local highlighting = false
 local highlights = {}
 
 local function addHighlightToCharacter(char)
 	if not char then return end
-	if highlights[char] then return end -- already highlighted
-	
+	if highlights[char] then return end
+
 	local hl = Instance.new("Highlight")
 	hl.FillColor = Color3.fromRGB(255, 0, 0)
 	hl.OutlineColor = Color3.fromRGB(255, 255, 255)
@@ -75,7 +116,6 @@ local function highlightAllPlayers()
 			if char then
 				addHighlightToCharacter(char)
 			end
-			-- Also connect to CharacterAdded to highlight if they respawn
 			plr.CharacterAdded:Connect(function(newChar)
 				if highlighting then
 					addHighlightToCharacter(newChar)
@@ -97,19 +137,74 @@ highButton.MouseButton1Click:Connect(function()
 	end
 end)
 
-spawn(function()
-	while true do
-		if highlighting then
-			print("Working")
-		end
-		wait(1)
+-- Jumpboost applying function
+local function applyJumpBoost()
+	local jumpHeight = tonumber(jumpboostBox.Text)
+	if jumpHeight then
+		humanoid.JumpHeight = jumpHeight
+		print("JumpHeight set to:", jumpHeight)
+	else
+		warn("Invalid jump height input.")
+	end
+end
+
+jumpboostBox.FocusLost:Connect(function(enterPressed)
+	if enterPressed then
+		applyJumpBoost()
 	end
 end)
 
+-- Speed buttons logic
 speedButton.MouseButton1Click:Connect(function()
 	humanoid.WalkSpeed = humanoid.WalkSpeed + 10
 end)
 
 resetButton.MouseButton1Click:Connect(function()
 	humanoid.WalkSpeed = 16
+	humanoid.JumpHeight = 7.2
+end)
+
+-- Draggable logic for draggableBar and container
+local UIS = game:GetService("UserInputService")
+
+local function makeDraggable(dragHandle, frameToMove)
+	local dragging = false
+	local dragStart, startPos
+
+	dragHandle.InputBegan:Connect(function(input)
+		if input.UserInputType == Enum.UserInputType.MouseButton1 then
+			dragging = true
+			dragStart = input.Position
+			startPos = frameToMove.Position
+
+			input.Changed:Connect(function()
+				if input.UserInputState == Enum.UserInputState.End then
+					dragging = false
+				end
+			end)
+		end
+	end)
+
+	dragHandle.InputChanged:Connect(function(input)
+		if input.UserInputType == Enum.UserInputType.MouseMovement then
+			input.Changed:Connect(function()
+				if dragging then
+					local delta = input.Position - dragStart
+					frameToMove.Position = UDim2.new(
+						startPos.X.Scale, startPos.X.Offset + delta.X,
+						startPos.Y.Scale, startPos.Y.Offset + delta.Y
+					)
+				end
+			end)
+		end
+	end)
+end
+
+makeDraggable(draggableBar, container)
+
+-- Close button toggles background visibility (buttons/input)
+local isVisible = true
+closeButton.MouseButton1Click:Connect(function()
+	isVisible = not isVisible
+	background.Visible = isVisible
 end)
