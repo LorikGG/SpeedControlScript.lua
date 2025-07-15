@@ -1,0 +1,76 @@
+local player = game.Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local humanoid = character:WaitForChild("Humanoid")
+
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "SpeedControlGui"
+screenGui.Parent = player:WaitForChild("PlayerGui")
+
+local background = Instance.new("Frame")
+background.Size = UDim2.new(0.387, 0, 0.472, 0)
+background.Position = UDim2.new(0.076, 0, 0.125, 0)
+background.BackgroundColor3 = Color3.fromRGB(92, 255, 144)
+background.BorderSizePixel = 2
+background.BackgroundTransparency = 0.33
+background.Parent = screenGui
+
+local speedButton = Instance.new("TextButton")
+speedButton.Size = UDim2.new(0.407, 0, 0.179, 0)
+speedButton.Position = UDim2.new(0.041, 0, 0.737, 0)
+speedButton.Text = "Increase Speed"
+speedButton.TextScaled = true
+speedButton.Parent = background
+speedButton.BackgroundColor3 = Color3.fromRGB(75, 231, 255)
+
+local resetButton = Instance.new("TextButton")
+resetButton.Size = UDim2.new(0.407, 0, 0.179, 0)
+resetButton.Position = UDim2.new(0.53, 0, 0.737, 0)
+resetButton.Text = "Reset Speed"
+resetButton.TextScaled = true
+resetButton.Parent = background
+resetButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+
+local highButton = Instance.new("TextButton")
+highButton.Size = UDim2.new(0.407, 0, 0.179, 0)
+highButton.Position = UDim2.new(0.31, 0, 0.357, 0)
+highButton.Text = "Highlight players"
+highButton.TextScaled = true
+highButton.FontFace.Weight = Enum.FontWeight.Bold
+highButton.Parent = background
+highButton.BackgroundColor3 = Color3.fromRGB(210, 46, 255)
+
+local highlight = Instance.new("Highlight")
+highlight.FillColor = Color3.fromRGB(255, 0, 0)
+highlight.OutlineColor = Color3.fromRGB(255, 255, 255)
+highlight.Adornee = character
+
+local highlighting = false
+
+highButton.MouseButton1Click:Connect(function()
+	if highlighting then
+		highlight.Parent = nil
+		highButton.Text = "Highlight players"
+		highlighting = false
+	else
+		highlight.Parent = character
+		highButton.Text = "Disable Highlight"
+		highlighting = true
+	end
+end)
+
+-- Loop that runs every 1 second while highlighting is true
+spawn(function()
+	while true do
+		if highlighting then
+			print("Working")
+		end
+		wait(1)
+	end
+end)
+speedButton.MouseButton1Click:Connect(function()
+	humanoid.WalkSpeed = humanoid.WalkSpeed + 10
+end)
+
+resetButton.MouseButton1Click:Connect(function()
+	humanoid.WalkSpeed = 16
+end)
