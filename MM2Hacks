@@ -1,0 +1,42 @@
+local player = game.Players.LocalPlayer
+local players = game.Players
+
+local screengui = Instance.new("ScreenGui")
+screengui.Parent = player:WaitForChild("PlayerGui")
+
+local showRoles = Instance.new("TextButton")
+showRoles.Parent = screengui
+showRoles.Size = UDim2.new(0.177, 0, 0.116, 0)
+showRoles.Position = UDim2.new(0.149, 0, 0.42, 0)
+showRoles.Text = "Highlight Knife"
+showRoles.TextScaled = true
+
+showRoles.MouseButton1Click:Connect(function()
+	for _, otherPlayer in pairs(players:GetPlayers()) do
+		local hasKnife = false
+
+		-- Check Backpack
+		local backpack = otherPlayer:FindFirstChild("Backpack")
+		if backpack and backpack:FindFirstChild("Knife") then
+			hasKnife = true
+		end
+
+		-- Check Character
+		local character = otherPlayer.Character
+		if character and character:FindFirstChild("Knife") then
+			hasKnife = true
+		end
+
+		-- If the player has the knife, highlight them
+		if hasKnife then
+			local textLabel = Instance.new("TextLabel")
+			textLabel.Parent = screengui
+			textLabel.Size = UDim2.new(0.3, 0, 0.05, 0)
+			textLabel.Position = UDim2.new(0.1, 0, 0.1 + (_ * 0.06), 0) -- staggered positions
+			textLabel.Text = otherPlayer.Name .. " has a Knife!"
+			textLabel.TextScaled = true
+			textLabel.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+			textLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+		end
+	end
+end)
