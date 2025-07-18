@@ -1,91 +1,100 @@
+-- References
 local Players = game:GetService("Players")
-local player = Players.LocalPlayer
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local UserInputService = game:GetService("UserInputService")
 
-local screenGui = Instance.new("ScreenGui", player:WaitForChild("PlayerGui"))
+local player = Players.LocalPlayer
+local playerGui = player:WaitForChild("PlayerGui")
+local skipStageEvent = ReplicatedStorage:FindFirstChild("SkipStage")
+
+-- Create GUI
+local screenGui = Instance.new("ScreenGui")
 screenGui.Name = "SpeedControlGui"
+screenGui.Parent = playerGui
 
 local container = Instance.new("Frame")
-container.Size = UDim2.new(0.4, 0, 0.5, 0)
-container.Position = UDim2.new(0.1, 0, 0.1, 0)
-container.BackgroundTransparency = 1
+container.Size = UDim2.new(0.4, 0, 0.6, 0)
+container.Position = UDim2.new(0.3, 0, 0.25, 0)
+container.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+container.BorderSizePixel = 2
 container.Parent = screenGui
 
 local draggableBar = Instance.new("Frame")
 draggableBar.Size = UDim2.new(1, 0, 0.1, 0)
-draggableBar.BackgroundColor3 = Color3.fromRGB(70,70,70)
+draggableBar.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
 draggableBar.Parent = container
 
 local closeButton = Instance.new("TextButton")
-closeButton.Size = UDim2.new(0.1,0,1,0)
-closeButton.Position = UDim2.new(0.9,0,0,0)
+closeButton.Size = UDim2.new(0.048, 0, 0.098, 0)
+closeButton.Position = UDim2.new(0.801, 0, 0.059, 0)
 closeButton.Text = "X"
 closeButton.Font = Enum.Font.FredokaOne
 closeButton.TextScaled = true
-closeButton.BackgroundColor3 = Color3.fromRGB(255,0,4)
-closeButton.Parent = draggableBar
+closeButton.BackgroundColor3 = Color3.fromRGB(255, 0, 4)
+closeButton.Parent = screenGui  -- Parent to ScreenGui for always on top
 
 local background = Instance.new("Frame")
 background.Size = UDim2.new(1, 0, 0.9, 0)
 background.Position = UDim2.new(0, 0, 0.1, 0)
-background.BackgroundColor3 = Color3.fromRGB(92, 255, 144)
+background.BackgroundColor3 = Color3.fromRGB(139, 205, 255)
 background.BorderSizePixel = 2
-background.BackgroundTransparency = 0.33
+background.BackgroundTransparency = 0.2
 background.Parent = container
 
--- Noclip button
+-- Utility function
+local function getHumanoid()
+	local character = player.Character or player.CharacterAdded:Wait()
+	return character:WaitForChild("Humanoid")
+end
+
+-- Noclip Toggle
+local noclip = false
 local noclipButton = Instance.new("TextButton")
-noclipButton.Size = UDim2.new(0.4,0,0.2,0)
-noclipButton.Position = UDim2.new(0.05,0,0.1,0)
+noclipButton.Size = UDim2.new(0.413, 0,0.198, 0)
+noclipButton.Position = UDim2.new(0.067, 0,0.094, 0)
 noclipButton.Text = "Noclip OFF"
-noclipButton.Font = Enum.Font.FredokaOne
 noclipButton.TextScaled = true
-noclipButton.BackgroundColor3 = Color3.fromRGB(228,255,108)
+noclipButton.BackgroundColor3 = Color3.new(1, 0.933333, 0.184314)
+noclipButton.Font = Enum.Font.FredokaOne
 noclipButton.Parent = background
 
-local noclip = false
-
 local function toggleNoclip()
-	local char = player.Character or player.CharacterAdded:Wait()
-	for _, part in ipairs(char:GetChildren()) do
+	local character = player.Character or player.CharacterAdded:Wait()
+	for _, part in ipairs(character:GetChildren()) do
 		if part:IsA("BasePart") then
-			part.CanCollide = not noclip
+			part.CanCollide = noclip
+			part.CanTouch = noclip
 		end
 	end
 	noclip = not noclip
-	noclipButton.Text = noclip and "Turn Noclip ON" or "Turn Noclip OFF"
-	print(noclip and "Turn Noclip ON" or "Turn Noclip OFF")
+	noclipButton.Text = noclip and "Noclip ON" or "Noclip OFF"
 end
 
 noclipButton.MouseButton1Click:Connect(toggleNoclip)
 
--- Speed boost button
+-- Speed Button
 local speedButton = Instance.new("TextButton")
-speedButton.Size = UDim2.new(0.4,0,0.2,0)
-speedButton.Position = UDim2.new(0.55,0,0.1,0)
+speedButton.Size = UDim2.new(0.413, 0,0.198, 0)
+speedButton.Position = UDim2.new(0.55, 0,0.094, 0)
 speedButton.Text = "Increase Speed"
-speedButton.Font = Enum.Font.FredokaOne
 speedButton.TextScaled = true
-speedButton.BackgroundColor3 = Color3.fromRGB(75,231,255)
+speedButton.BackgroundColor3 = Color3.new(0.890196, 0.780392, 1)
+speedButton.Font = Enum.Font.FredokaOne
 speedButton.Parent = background
-
-local function getHumanoid()
-	local char = player.Character or player.CharacterAdded:Wait()
-	return char:WaitForChild("Humanoid")
-end
 
 speedButton.MouseButton1Click:Connect(function()
 	local humanoid = getHumanoid()
-	humanoid.WalkSpeed = humanoid.WalkSpeed + 10
+	humanoid.WalkSpeed += 10
 end)
 
--- Reset speed/jump button
+-- Reset Speed/Jump
 local resetButton = Instance.new("TextButton")
-resetButton.Size = UDim2.new(0.4,0,0.2,0)
-resetButton.Position = UDim2.new(0.05,0,0.4,0)
+resetButton.Size = UDim2.new(0.413, 0,0.198, 0)
+resetButton.Position = UDim2.new(0.067, 0,0.698, 0)
 resetButton.Text = "Reset Speed/Jump"
-resetButton.Font = Enum.Font.FredokaOne
 resetButton.TextScaled = true
-resetButton.BackgroundColor3 = Color3.fromRGB(255,0,0)
+resetButton.BackgroundColor3 = Color3.new(1, 0.235294, 0.27451)
+resetButton.Font = Enum.Font.FredokaOne
 resetButton.Parent = background
 
 resetButton.MouseButton1Click:Connect(function()
@@ -94,14 +103,29 @@ resetButton.MouseButton1Click:Connect(function()
 	humanoid.JumpHeight = 7.2
 end)
 
--- Jump Boost box
+-- Extra HP Button
+local hpButton = Instance.new("TextButton")
+hpButton.Size = UDim2.new(0.413, 0,0.198, 0)
+hpButton.Position = UDim2.new(0.55, 0,0.4, 0)
+hpButton.Text = "Gain 100 HP"
+hpButton.TextScaled = true
+hpButton.BackgroundColor3 = Color3.new(0.0117647, 1, 0.423529)
+hpButton.Font = Enum.Font.FredokaOne
+hpButton.Parent = background
+
+hpButton.MouseButton1Click:Connect(function()
+	local humanoid = getHumanoid()
+	humanoid.Health = humanoid.Health + 100
+end)
+
+-- Jump Height Input
 local jumpBox = Instance.new("TextBox")
-jumpBox.Size = UDim2.new(0.4,0,0.2,0)
-jumpBox.Position = UDim2.new(0.55,0,0.4,0)
+jumpBox.Size = UDim2.new(0.413, 0,0.198, 0)
+jumpBox.Position = UDim2.new(0.067, 0,0.4, 0)
 jumpBox.Text = "Set Jump Height"
-jumpBox.Font = Enum.Font.FredokaOne
-jumpBox.BackgroundColor3 = Color3.fromRGB(47,85,255)
 jumpBox.TextScaled = true
+jumpBox.BackgroundColor3 = Color3.new(0.32549, 0.584314, 1)
+jumpBox.Font = Enum.Font.FredokaOne
 jumpBox.Parent = background
 
 jumpBox.FocusLost:Connect(function(enterPressed)
@@ -110,81 +134,84 @@ jumpBox.FocusLost:Connect(function(enterPressed)
 		if value then
 			local humanoid = getHumanoid()
 			humanoid.JumpHeight = value
-			print("Jump Height set to", value)
 		end
 	end
 end)
 
--- Highlight players
-local highlightButton = Instance.new("TextButton")
-highlightButton.Size = UDim2.new(0.9,0,0.2,0)
-highlightButton.Position = UDim2.new(0.05, 0,0.7, 0)
-highlightButton.Text = "Highlight Players"
-highlightButton.Font = Enum.Font.FredokaOne
-highlightButton.TextScaled = true
-highlightButton.BackgroundColor3 = Color3.fromRGB(210,46,255)
-highlightButton.Parent = background
-
+-- Highlight Players
 local highlighting = false
 local highlights = {}
 
-local function addHighlight(char)
-	if not char or highlights[char] then return end
-	local hl = Instance.new("Highlight", char)
-	hl.FillColor = Color3.fromRGB(255,0,0)
-	hl.OutlineColor = Color3.fromRGB(255,255,255)
-	highlights[char] = hl
-end
+local highlightButton = Instance.new("TextButton")
+highlightButton.Size = UDim2.new(0.413, 0,0.198, 0)
+highlightButton.Position = UDim2.new(0.55, 0,0.698, 0)
+highlightButton.Text = "Highlight Players"
+highlightButton.TextScaled = true
+highlightButton.BackgroundColor3 = Color3.new(0.945098, 0.172549, 1)
+highlightButton.Font = Enum.Font.FredokaOne
+highlightButton.Parent = background
 
-local function highlightAll()
-	for _, plr in pairs(Players:GetPlayers()) do
-		if plr ~= player and plr.Character then
-			addHighlight(plr.Character)
-			plr.CharacterAdded:Connect(function(char)
-				if highlighting then
-					addHighlight(char)
-				end
-			end)
-		end
+local function addHighlight(character)
+	if not highlights[character] then
+		local hl = Instance.new("Highlight")
+		hl.FillColor = Color3.fromRGB(255, 0, 0)
+		hl.OutlineColor = Color3.fromRGB(255, 255, 255)
+		hl.Parent = character
+		highlights[character] = hl
 	end
 end
 
-local function clearHighlights()
-	for _, hl in pairs(highlights) do
-		if hl then hl:Destroy() end
-	end
-	highlights = {}
-end
-
-highlightButton.MouseButton1Click:Connect(function()
+local function toggleHighlight()
 	if highlighting then
-		clearHighlights()
+		for _, hl in pairs(highlights) do hl:Destroy() end
+		highlights = {}
 		highlightButton.Text = "Highlight Players"
 	else
-		highlightAll()
+		for _, plr in pairs(Players:GetPlayers()) do
+			if plr ~= player and plr.Character then
+				addHighlight(plr.Character)
+				plr.CharacterAdded:Connect(addHighlight)
+			end
+		end
 		highlightButton.Text = "Disable Highlight"
 	end
 	highlighting = not highlighting
-end)
+end
 
--- Close button logic
+highlightButton.MouseButton1Click:Connect(toggleHighlight)
+
+-- Skip Stage
+local skipButton
+if skipStageEvent then
+	skipButton = Instance.new("TextButton")
+	skipButton.Size = UDim2.new(0.413, 0,0.198, 0)
+	skipButton.Position = UDim2.new(0.05, 0, 0.53, 0)
+	skipButton.Text = "Skip Stage"
+	skipButton.Parent = background
+
+	skipButton.MouseButton1Click:Connect(function()
+		skipStageEvent:FireServer()
+	end)
+end
+
+-- Close Button Logic: toggle container visibility (everything except closeButton)
 local isVisible = true
+
 closeButton.MouseButton1Click:Connect(function()
 	isVisible = not isVisible
-	background.Visible = isVisible
+	container.Visible = isVisible
 end)
 
--- Draggable logic
-local UIS = game:GetService("UserInputService")
-
+-- Draggable Logic supporting mouse and touch input
 local function makeDraggable(dragHandle, frameToMove)
 	local dragging, dragStart, startPos = false, nil, nil
 
 	dragHandle.InputBegan:Connect(function(input)
-		if input.UserInputType == Enum.UserInputType.MouseButton1 then
+		if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
 			dragging = true
 			dragStart = input.Position
 			startPos = frameToMove.Position
+
 			input.Changed:Connect(function()
 				if input.UserInputState == Enum.UserInputState.End then
 					dragging = false
@@ -194,7 +221,7 @@ local function makeDraggable(dragHandle, frameToMove)
 	end)
 
 	dragHandle.InputChanged:Connect(function(input)
-		if input.UserInputType == Enum.UserInputType.MouseMovement and dragging then
+		if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
 			local delta = input.Position - dragStart
 			frameToMove.Position = UDim2.new(
 				startPos.X.Scale, startPos.X.Offset + delta.X,
@@ -205,3 +232,4 @@ local function makeDraggable(dragHandle, frameToMove)
 end
 
 makeDraggable(draggableBar, container)
+makeDraggable(closeButton, closeButton)
