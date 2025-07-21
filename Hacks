@@ -1,17 +1,27 @@
--- References
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local UserInputService = game:GetService("UserInputService")
 
 local player = Players.LocalPlayer
 local playerGui = player:WaitForChild("PlayerGui")
-local skipStageEvent = ReplicatedStorage:FindFirstChild("SkipStage")
 
--- Create GUI
+-- Utility function
+local function getCharacter()
+	return player.Character or player.CharacterAdded:Wait()
+end
+local function getHumanoid()
+	return getCharacter():WaitForChild("Humanoid")
+end
+local function getHRP()
+	return getCharacter():WaitForChild("HumanoidRootPart")
+end
+
+-- Create main ScreenGui
 local screenGui = Instance.new("ScreenGui")
 screenGui.Name = "SpeedControlGui"
 screenGui.Parent = playerGui
 
+-- Main container frame
 local container = Instance.new("Frame")
 container.Size = UDim2.new(0.4, 0, 0.6, 0)
 container.Position = UDim2.new(0.3, 0, 0.25, 0)
@@ -19,11 +29,13 @@ container.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
 container.BorderSizePixel = 2
 container.Parent = screenGui
 
+-- Draggable Bar
 local draggableBar = Instance.new("Frame")
 draggableBar.Size = UDim2.new(1, 0, 0.1, 0)
 draggableBar.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
 draggableBar.Parent = container
 
+-- Close Button
 local closeButton = Instance.new("TextButton")
 closeButton.Size = UDim2.new(0.048, 0, 0.098, 0)
 closeButton.Position = UDim2.new(0.801, 0, 0.059, 0)
@@ -31,35 +43,36 @@ closeButton.Text = "X"
 closeButton.Font = Enum.Font.FredokaOne
 closeButton.TextScaled = true
 closeButton.BackgroundColor3 = Color3.fromRGB(255, 0, 4)
-closeButton.Parent = screenGui  -- Parent to ScreenGui for always on top
+closeButton.Parent = screenGui -- outside container, always on top
 
-local background = Instance.new("Frame")
-background.Size = UDim2.new(1, 0, 0.9, 0)
-background.Position = UDim2.new(0, 0, 0.1, 0)
-background.BackgroundColor3 = Color3.fromRGB(139, 205, 255)
-background.BorderSizePixel = 2
-background.BackgroundTransparency = 0.2
-background.Parent = container
+-- ScrollFrame for buttons
+local scrollFrame = Instance.new("ScrollingFrame")
+scrollFrame.Size = UDim2.new(1, 0, 0.9, 0)
+scrollFrame.Position = UDim2.new(0, 0, 0.1, 0)
+scrollFrame.BackgroundTransparency = 1
+scrollFrame.ScrollBarThickness = 8
+scrollFrame.Parent = container
 
--- Utility function
-local function getHumanoid()
-	local character = player.Character or player.CharacterAdded:Wait()
-	return character:WaitForChild("Humanoid")
-end
+local uiListLayout = Instance.new("UIListLayout")
+uiListLayout.Parent = scrollFrame
+uiListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+uiListLayout.Padding = UDim.new(0, 8)
+
+-- Button size to keep consistent
+local buttonSize = UDim2.new(0.9, 0, 0, 50)
 
 -- Noclip Toggle
 local noclip = false
 local noclipButton = Instance.new("TextButton")
-noclipButton.Size = UDim2.new(0.413, 0,0.198, 0)
-noclipButton.Position = UDim2.new(0.067, 0,0.094, 0)
+noclipButton.Size = buttonSize
 noclipButton.Text = "Noclip OFF"
 noclipButton.TextScaled = true
 noclipButton.BackgroundColor3 = Color3.new(1, 0.933333, 0.184314)
 noclipButton.Font = Enum.Font.FredokaOne
-noclipButton.Parent = background
+noclipButton.Parent = scrollFrame
 
 local function toggleNoclip()
-	local character = player.Character or player.CharacterAdded:Wait()
+	local character = getCharacter()
 	for _, part in ipairs(character:GetChildren()) do
 		if part:IsA("BasePart") then
 			part.CanCollide = noclip
@@ -69,18 +82,16 @@ local function toggleNoclip()
 	noclip = not noclip
 	noclipButton.Text = noclip and "Noclip ON" or "Noclip OFF"
 end
-
 noclipButton.MouseButton1Click:Connect(toggleNoclip)
 
 -- Speed Button
 local speedButton = Instance.new("TextButton")
-speedButton.Size = UDim2.new(0.413, 0,0.198, 0)
-speedButton.Position = UDim2.new(0.55, 0,0.094, 0)
+speedButton.Size = buttonSize
 speedButton.Text = "Increase Speed"
 speedButton.TextScaled = true
 speedButton.BackgroundColor3 = Color3.new(0.890196, 0.780392, 1)
 speedButton.Font = Enum.Font.FredokaOne
-speedButton.Parent = background
+speedButton.Parent = scrollFrame
 
 speedButton.MouseButton1Click:Connect(function()
 	local humanoid = getHumanoid()
@@ -89,13 +100,12 @@ end)
 
 -- Reset Speed/Jump
 local resetButton = Instance.new("TextButton")
-resetButton.Size = UDim2.new(0.413, 0,0.198, 0)
-resetButton.Position = UDim2.new(0.067, 0,0.698, 0)
+resetButton.Size = buttonSize
 resetButton.Text = "Reset Speed/Jump"
 resetButton.TextScaled = true
 resetButton.BackgroundColor3 = Color3.new(1, 0.235294, 0.27451)
 resetButton.Font = Enum.Font.FredokaOne
-resetButton.Parent = background
+resetButton.Parent = scrollFrame
 
 resetButton.MouseButton1Click:Connect(function()
 	local humanoid = getHumanoid()
@@ -105,13 +115,12 @@ end)
 
 -- Extra HP Button
 local hpButton = Instance.new("TextButton")
-hpButton.Size = UDim2.new(0.413, 0,0.198, 0)
-hpButton.Position = UDim2.new(0.55, 0,0.4, 0)
+hpButton.Size = buttonSize
 hpButton.Text = "Gain 100 HP"
 hpButton.TextScaled = true
 hpButton.BackgroundColor3 = Color3.new(0.0117647, 1, 0.423529)
 hpButton.Font = Enum.Font.FredokaOne
-hpButton.Parent = background
+hpButton.Parent = scrollFrame
 
 hpButton.MouseButton1Click:Connect(function()
 	local humanoid = getHumanoid()
@@ -120,13 +129,12 @@ end)
 
 -- Jump Height Input
 local jumpBox = Instance.new("TextBox")
-jumpBox.Size = UDim2.new(0.413, 0,0.198, 0)
-jumpBox.Position = UDim2.new(0.067, 0,0.4, 0)
+jumpBox.Size = buttonSize
 jumpBox.Text = "Set Jump Height"
 jumpBox.TextScaled = true
 jumpBox.BackgroundColor3 = Color3.new(0.32549, 0.584314, 1)
 jumpBox.Font = Enum.Font.FredokaOne
-jumpBox.Parent = background
+jumpBox.Parent = scrollFrame
 
 jumpBox.FocusLost:Connect(function(enterPressed)
 	if enterPressed then
@@ -143,13 +151,12 @@ local highlighting = false
 local highlights = {}
 
 local highlightButton = Instance.new("TextButton")
-highlightButton.Size = UDim2.new(0.413, 0,0.198, 0)
-highlightButton.Position = UDim2.new(0.55, 0,0.698, 0)
+highlightButton.Size = buttonSize
 highlightButton.Text = "Highlight Players"
 highlightButton.TextScaled = true
 highlightButton.BackgroundColor3 = Color3.new(0.945098, 0.172549, 1)
 highlightButton.Font = Enum.Font.FredokaOne
-highlightButton.Parent = background
+highlightButton.Parent = scrollFrame
 
 local function addHighlight(character)
 	if not highlights[character] then
@@ -180,19 +187,48 @@ end
 
 highlightButton.MouseButton1Click:Connect(toggleHighlight)
 
--- Skip Stage
-local skipButton
-if skipStageEvent then
-	skipButton = Instance.new("TextButton")
-	skipButton.Size = UDim2.new(0.413, 0,0.198, 0)
-	skipButton.Position = UDim2.new(0.05, 0, 0.53, 0)
-	skipButton.Text = "Skip Stage"
-	skipButton.Parent = background
+-- Teleport Button
+local TpButton = Instance.new("TextButton")
+TpButton.Size = buttonSize
+TpButton.BackgroundColor3 = Color3.fromRGB(255, 176, 49)
+TpButton.TextScaled = true
+TpButton.Text = "Teleport 20 studs forward"
+TpButton.Font = Enum.Font.FredokaOne
+TpButton.Parent = scrollFrame
 
-	skipButton.MouseButton1Click:Connect(function()
-		skipStageEvent:FireServer()
-	end)
+TpButton.MouseButton1Click:Connect(function()
+	print("TpButton clicked")
+	local hrp = getHRP()
+	local forward = hrp.CFrame.LookVector * 20
+	hrp.CFrame = hrp.CFrame + forward
+end)
+
+-- Infinite Jump Button
+local infiniteJumpEnabled = false
+local autojump = Instance.new("TextButton")
+autojump.Size = buttonSize
+autojump.BackgroundColor3 = Color3.fromRGB(149, 57, 255)
+autojump.TextScaled = true
+autojump.Text = "Enable Infinite Jump"
+autojump.Font = Enum.Font.FredokaOne
+autojump.Parent = scrollFrame
+
+local function onInput(input, gameProcessed)
+	if infiniteJumpEnabled and input.KeyCode == Enum.KeyCode.Space then
+		local humanoid = getHumanoid()
+		humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+	end
 end
+
+autojump.MouseButton1Click:Connect(function()
+	infiniteJumpEnabled = not infiniteJumpEnabled
+	print("Infinite Jump toggled:", infiniteJumpEnabled)
+	autojump.Text = infiniteJumpEnabled and "Disable Infinite Jump" or "Enable Infinite Jump"
+
+	if infiniteJumpEnabled then
+		UserInputService.InputBegan:Connect(onInput)
+	end
+end)
 
 -- Close Button Logic: toggle container visibility (everything except closeButton)
 local isVisible = true
