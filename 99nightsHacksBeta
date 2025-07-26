@@ -38,24 +38,33 @@ local function getPrimaryPart(model)
 	return nil
 end
 
--- Bring item directly to player and make it fall instantly
-local function bringItemToPlayer(itemModel)
-	local primaryPart = getPrimaryPart(itemModel)
-	if primaryPart then
-		-- Enable physics BEFORE teleport
-		for _, part in ipairs(itemModel:GetDescendants()) do
-			if part:IsA("BasePart") then
-				part.Anchored = false
-				part.CanCollide = true
+-- Bring all models with the given name to the player
+local function bringAllItemsToPlayer(itemName)
+	local itemsFolder = workspace:FindFirstChild("Items")
+	if not itemsFolder then return end
+
+	local count = 0
+	for _, model in ipairs(itemsFolder:GetChildren()) do
+		if model:IsA("Model") and model.Name == itemName then
+			local primaryPart = getPrimaryPart(model)
+			if primaryPart then
+				-- Enable physics first
+				for _, part in ipairs(model:GetDescendants()) do
+					if part:IsA("BasePart") then
+						part.Anchored = false
+						part.CanCollide = true
+					end
+				end
+
+				-- Stack them in front of the player, spread out slightly
+				local forward = hrp.CFrame.LookVector
+				local offset = forward * (4 + count * 3) + Vector3.new(0, 1, 0)
+				local spawnPosition = hrp.Position + offset
+
+				model:SetPrimaryPartCFrame(CFrame.new(spawnPosition))
+				count += 1
 			end
 		end
-
-		-- Slightly above the ground in front of the player
-		local forward = hrp.CFrame.LookVector
-		local spawnPosition = hrp.Position + forward * 4
-		spawnPosition = Vector3.new(spawnPosition.X, hrp.Position.Y + 1, spawnPosition.Z)
-
-		itemModel:SetPrimaryPartCFrame(CFrame.new(spawnPosition))
 	end
 end
 
@@ -66,17 +75,11 @@ local function createButton(itemName)
 	button.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 	button.TextScaled = true
 	button.Font = Enum.Font.FredokaOne
-	button.Text = "Bring " .. itemName
+	button.Text = "Bring All " .. itemName
 	button.Parent = scrollFrame
 
 	button.MouseButton1Click:Connect(function()
-		local itemsFolder = workspace:FindFirstChild("Items")
-		if itemsFolder then
-			local model = itemsFolder:FindFirstChild(itemName)
-			if model and model:IsA("Model") then
-				bringItemToPlayer(model)
-			end
-		end
+		bringAllItemsToPlayer(itemName)
 	end)
 end
 
