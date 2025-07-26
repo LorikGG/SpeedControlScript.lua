@@ -3,101 +3,113 @@ local character = player.Character or player.CharacterAdded:Wait()
 local humanoid = character:WaitForChild("Humanoid")
 local hrp = character:WaitForChild("HumanoidRootPart")
 
+-- GUI Setup
 local screengui = Instance.new("ScreenGui")
-screengui.Parent = player.PlayerGui
+screengui.Name = "ItemCollectorGUI"
+screengui.Parent = player:WaitForChild("PlayerGui")
 
--- Function to teleport player and return to original position
-local function teleportAndReturn(originalPosition, targetPosition)
-	local originalCFrame = originalPosition
-	hrp.CFrame = targetPosition
-	wait(3) -- Wait for 1 second to allow player to collect items
-	hrp.CFrame = originalCFrame
-end
+-- Scroll Frame on the left side
+local scrollFrame = Instance.new("ScrollingFrame")
+scrollFrame.Parent = screengui
+scrollFrame.Position = UDim2.new(0.05, 0, 0.1, 0)
+scrollFrame.Size = UDim2.new(0, 220, 0.5, 0)
+scrollFrame.CanvasSize = UDim2.new(0, 0, 0, 0)
+scrollFrame.ScrollBarThickness = 8
+scrollFrame.BackgroundColor3 = Color3.fromRGB(240, 240, 240)
+scrollFrame.BorderSizePixel = 0
+scrollFrame.AutomaticCanvasSize = Enum.AutomaticSize.Y
 
--- Function to get the primary part of a model
+local layout = Instance.new("UIListLayout")
+layout.Parent = scrollFrame
+layout.Padding = UDim.new(0, 5)
+layout.SortOrder = Enum.SortOrder.LayoutOrder
+
+-- Get PrimaryPart of a model
 local function getPrimaryPart(model)
 	if model.PrimaryPart then
 		return model.PrimaryPart
 	end
-
 	for _, part in ipairs(model:GetChildren()) do
 		if part:IsA("BasePart") then
 			model.PrimaryPart = part
 			return part
 		end
 	end
-
 	return nil
 end
 
--- Carrot Button
-local CarrotButton = Instance.new("TextButton")
-CarrotButton.Parent = screengui
-CarrotButton.Position = UDim2.new(0.5, -100, 0.1, 0)
-CarrotButton.Size = UDim2.new(0, 200, 0, 50)
-CarrotButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-CarrotButton.TextScaled = true
-CarrotButton.Text = "Collect Carrots"
-CarrotButton.Font = Enum.Font.FredokaOne
-CarrotButton.MouseButton1Click:Connect(function()
-	local itemsFolder = workspace:FindFirstChild("Items")
-	if itemsFolder then
-		local carrotModel = itemsFolder:FindFirstChild("Carrot")
-		if carrotModel and carrotModel:IsA("Model") then
-			local primaryPart = getPrimaryPart(carrotModel)
-			if primaryPart then
-				local originalPosition = hrp.CFrame
-				local targetPosition = primaryPart.CFrame
-				teleportAndReturn(originalPosition, targetPosition)
+-- Bring item directly to player and make it fall instantly
+local function bringItemToPlayer(itemModel)
+	local primaryPart = getPrimaryPart(itemModel)
+	if primaryPart then
+		-- Enable physics BEFORE teleport
+		for _, part in ipairs(itemModel:GetDescendants()) do
+			if part:IsA("BasePart") then
+				part.Anchored = false
+				part.CanCollide = true
 			end
 		end
-	end
-end)
 
--- Coal Button
-local CoalButton = Instance.new("TextButton")
-CoalButton.Parent = screengui
-CoalButton.Position = UDim2.new(0.5, -100, 0.2, 0)
-CoalButton.Size = UDim2.new(0, 200, 0, 50)
-CoalButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-CoalButton.TextScaled = true
-CoalButton.Text = "Collect Coal"
-CoalButton.Font = Enum.Font.FredokaOne
-CoalButton.MouseButton1Click:Connect(function()
-	local itemsFolder = workspace:FindFirstChild("Items")
-	if itemsFolder then
-		local coalModel = itemsFolder:FindFirstChild("Coal")
-		if coalModel and coalModel:IsA("Model") then
-			local primaryPart = getPrimaryPart(coalModel)
-			if primaryPart then
-				local originalPosition = hrp.CFrame
-				local targetPosition = primaryPart.CFrame
-				teleportAndReturn(originalPosition, targetPosition)
-			end
-		end
-	end
-end)
+		-- Slightly above the ground in front of the player
+		local forward = hrp.CFrame.LookVector
+		local spawnPosition = hrp.Position + forward * 4
+		spawnPosition = Vector3.new(spawnPosition.X, hrp.Position.Y + 1, spawnPosition.Z)
 
--- Log Button
-local LogButton = Instance.new("TextButton")
-LogButton.Parent = screengui
-LogButton.Position = UDim2.new(0.5, -100, 0.3, 0)
-LogButton.Size = UDim2.new(0, 200, 0, 50)
-LogButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-LogButton.TextScaled = true
-LogButton.Text = "Collect Logs"
-LogButton.Font = Enum.Font.FredokaOne
-LogButton.MouseButton1Click:Connect(function()
-	local itemsFolder = workspace:FindFirstChild("Items")
-	if itemsFolder then
-		local logModel = itemsFolder:FindFirstChild("Log")
-		if logModel and logModel:IsA("Model") then
-			local primaryPart = getPrimaryPart(logModel)
-			if primaryPart then
-				local originalPosition = hrp.CFrame
-				local targetPosition = primaryPart.CFrame
-				teleportAndReturn(originalPosition, targetPosition)
+		itemModel:SetPrimaryPartCFrame(CFrame.new(spawnPosition))
+	end
+end
+
+-- Create buttons for each item
+local function createButton(itemName)
+	local button = Instance.new("TextButton")
+	button.Size = UDim2.new(1, 0, 0, 40)
+	button.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	button.TextScaled = true
+	button.Font = Enum.Font.FredokaOne
+	button.Text = "Bring " .. itemName
+	button.Parent = scrollFrame
+
+	button.MouseButton1Click:Connect(function()
+		local itemsFolder = workspace:FindFirstChild("Items")
+		if itemsFolder then
+			local model = itemsFolder:FindFirstChild(itemName)
+			if model and model:IsA("Model") then
+				bringItemToPlayer(model)
 			end
 		end
-	end
+	end)
+end
+
+-- List of items
+local items = {
+	"Berry",
+	"Bolt",
+	"Broken Fan",
+	"Carrot",
+	"Chair",
+	"Coal",
+	"Coin Stack",
+	"Log",
+	"Item Chest",
+	"Sheet Metal"
+}
+
+for _, itemName in ipairs(items) do
+	createButton(itemName)
+end
+
+-- "X" Button to hide/show scroll frame
+local closeButton = Instance.new("TextButton")
+closeButton.Size = UDim2.new(0, 30, 0, 30)
+closeButton.Position = UDim2.new(0.05, 190, 0.1, -35)
+closeButton.BackgroundColor3 = Color3.fromRGB(255, 80, 80)
+closeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+closeButton.Font = Enum.Font.FredokaOne
+closeButton.Text = "X"
+closeButton.TextScaled = true
+closeButton.Parent = screengui
+closeButton.ZIndex = 2
+
+closeButton.MouseButton1Click:Connect(function()
+	scrollFrame.Visible = not scrollFrame.Visible
 end)
