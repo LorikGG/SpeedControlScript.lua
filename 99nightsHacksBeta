@@ -6,6 +6,30 @@ local hrp = character:WaitForChild("HumanoidRootPart")
 local screengui = Instance.new("ScreenGui")
 screengui.Parent = player.PlayerGui
 
+-- Function to teleport player and return to original position
+local function teleportAndReturn(originalPosition, targetPosition)
+	local originalCFrame = originalPosition
+	hrp.CFrame = targetPosition
+	wait(3) -- Wait for 1 second to allow player to collect items
+	hrp.CFrame = originalCFrame
+end
+
+-- Function to get the primary part of a model
+local function getPrimaryPart(model)
+	if model.PrimaryPart then
+		return model.PrimaryPart
+	end
+
+	for _, part in ipairs(model:GetChildren()) do
+		if part:IsA("BasePart") then
+			model.PrimaryPart = part
+			return part
+		end
+	end
+
+	return nil
+end
+
 -- Carrot Button
 local CarrotButton = Instance.new("TextButton")
 CarrotButton.Parent = screengui
@@ -20,10 +44,11 @@ CarrotButton.MouseButton1Click:Connect(function()
 	if itemsFolder then
 		local carrotModel = itemsFolder:FindFirstChild("Carrot")
 		if carrotModel and carrotModel:IsA("Model") then
-			for _, item in ipairs(carrotModel:GetChildren()) do
-				if item:IsA("BasePart") then
-					item.CFrame = hrp.CFrame + Vector3.new(0, 5, 0)
-				end
+			local primaryPart = getPrimaryPart(carrotModel)
+			if primaryPart then
+				local originalPosition = hrp.CFrame
+				local targetPosition = primaryPart.CFrame
+				teleportAndReturn(originalPosition, targetPosition)
 			end
 		end
 	end
@@ -43,10 +68,11 @@ CoalButton.MouseButton1Click:Connect(function()
 	if itemsFolder then
 		local coalModel = itemsFolder:FindFirstChild("Coal")
 		if coalModel and coalModel:IsA("Model") then
-			for _, item in ipairs(coalModel:GetChildren()) do
-				if item:IsA("BasePart") then
-					item.CFrame = hrp.CFrame + Vector3.new(0, 5, 0)
-				end
+			local primaryPart = getPrimaryPart(coalModel)
+			if primaryPart then
+				local originalPosition = hrp.CFrame
+				local targetPosition = primaryPart.CFrame
+				teleportAndReturn(originalPosition, targetPosition)
 			end
 		end
 	end
@@ -66,10 +92,11 @@ LogButton.MouseButton1Click:Connect(function()
 	if itemsFolder then
 		local logModel = itemsFolder:FindFirstChild("Log")
 		if logModel and logModel:IsA("Model") then
-			for _, item in ipairs(logModel:GetChildren()) do
-				if item:IsA("BasePart") then
-					item.CFrame = hrp.CFrame + Vector3.new(0, 5, 0)
-				end
+			local primaryPart = getPrimaryPart(logModel)
+			if primaryPart then
+				local originalPosition = hrp.CFrame
+				local targetPosition = primaryPart.CFrame
+				teleportAndReturn(originalPosition, targetPosition)
 			end
 		end
 	end
