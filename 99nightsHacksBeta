@@ -1,0 +1,76 @@
+local player = game.Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local humanoid = character:WaitForChild("Humanoid")
+local hrp = character:WaitForChild("HumanoidRootPart")
+
+local screengui = Instance.new("ScreenGui")
+screengui.Parent = player.PlayerGui
+
+-- Carrot Button
+local CarrotButton = Instance.new("TextButton")
+CarrotButton.Parent = screengui
+CarrotButton.Position = UDim2.new(0.5, -100, 0.1, 0)
+CarrotButton.Size = UDim2.new(0, 200, 0, 50)
+CarrotButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+CarrotButton.TextScaled = true
+CarrotButton.Text = "Collect Carrots"
+CarrotButton.Font = Enum.Font.FredokaOne
+CarrotButton.MouseButton1Click:Connect(function()
+	local itemsFolder = workspace:FindFirstChild("Items")
+	if itemsFolder then
+		local carrotModel = itemsFolder:FindFirstChild("Carrot")
+		if carrotModel and carrotModel:IsA("Model") then
+			for _, item in ipairs(carrotModel:GetChildren()) do
+				if item:IsA("BasePart") then
+					item.CFrame = hrp.CFrame + Vector3.new(0, 5, 0)
+				end
+			end
+		end
+	end
+end)
+
+-- Coal Button
+local CoalButton = Instance.new("TextButton")
+CoalButton.Parent = screengui
+CoalButton.Position = UDim2.new(0.5, -100, 0.2, 0)
+CoalButton.Size = UDim2.new(0, 200, 0, 50)
+CoalButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+CoalButton.TextScaled = true
+CoalButton.Text = "Collect Coal"
+CoalButton.Font = Enum.Font.FredokaOne
+CoalButton.MouseButton1Click:Connect(function()
+	local itemsFolder = workspace:FindFirstChild("Items")
+	if itemsFolder then
+		local coalModel = itemsFolder:FindFirstChild("Coal")
+		if coalModel and coalModel:IsA("Model") then
+			for _, item in ipairs(coalModel:GetChildren()) do
+				if item:IsA("BasePart") then
+					item.CFrame = hrp.CFrame + Vector3.new(0, 5, 0)
+				end
+			end
+		end
+	end
+end)
+
+-- Log Button
+local LogButton = Instance.new("TextButton")
+LogButton.Parent = screengui
+LogButton.Position = UDim2.new(0.5, -100, 0.3, 0)
+LogButton.Size = UDim2.new(0, 200, 0, 50)
+LogButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+LogButton.TextScaled = true
+LogButton.Text = "Collect Logs"
+LogButton.Font = Enum.Font.FredokaOne
+LogButton.MouseButton1Click:Connect(function()
+	local itemsFolder = workspace:FindFirstChild("Items")
+	if itemsFolder then
+		local logModel = itemsFolder:FindFirstChild("Log")
+		if logModel and logModel:IsA("Model") then
+			for _, item in ipairs(logModel:GetChildren()) do
+				if item:IsA("BasePart") then
+					item.CFrame = hrp.CFrame + Vector3.new(0, 5, 0)
+				end
+			end
+		end
+	end
+end)
