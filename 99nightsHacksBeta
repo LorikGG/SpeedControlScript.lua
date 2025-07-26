@@ -2,9 +2,10 @@ local player = game.Players.LocalPlayer
 local character = player.Character or player.CharacterAdded:Wait()
 local hrp = character:WaitForChild("HumanoidRootPart")
 
--- UI Setup
+-- GUI Setup
 local screengui = Instance.new("ScreenGui")
 screengui.Name = "ItemUI"
+screengui.ResetOnSpawn = false
 screengui.Parent = player:WaitForChild("PlayerGui")
 
 local frame = Instance.new("ScrollingFrame")
@@ -34,12 +35,11 @@ local function getPrimaryPart(model)
 	return nil
 end
 
--- Bring items to player
+-- Bring all matching items to player, stacked
 local function bringItems(name)
 	local folder = workspace:FindFirstChild("Items")
 	if not folder then return end
 
-	local index = 0
 	for _, model in folder:GetChildren() do
 		if model:IsA("Model") and model.Name == name then
 			local root = getPrimaryPart(model)
@@ -50,15 +50,14 @@ local function bringItems(name)
 						part.CanCollide = true
 					end
 				end
-				local offset = hrp.CFrame.LookVector * (4 + index * 3)
-				model:SetPrimaryPartCFrame(CFrame.new(hrp.Position + offset + Vector3.new(0, 1, 0)))
-				index += 1
+				local spawnPos = hrp.Position + Vector3.new(0, 3, 0)
+				model:SetPrimaryPartCFrame(CFrame.new(spawnPos))
 			end
 		end
 	end
 end
 
--- Teleport player to all chests of a type
+-- Teleport to all chests of a type
 local function teleportToChests(name)
 	local folder = workspace:FindFirstChild("Chests")
 	if not folder then return end
@@ -100,9 +99,9 @@ local items = {
 	"Alpha Wolf Pelt", "Bear Pelt", "Cultist Gem", "Bandage", "Medkit", "Rifle", "Rifle Ammo", "Revolver Ammo"
 }
 
--- Chests to TP to
+-- Chest types to teleport to
 local chests = {
-	"Common Chest", "Item Chest" , "Good Chest", "Iron Chest", "Legendary Chest",
+	"Common Chest", "Good Chest", "Iron Chest", "Legendary Chest",
 	"Gold Chest", "Ruby Chest", "Diamond Chest", "Alien Chest"
 }
 
