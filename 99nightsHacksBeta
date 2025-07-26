@@ -35,10 +35,13 @@ local function getPrimaryPart(model)
 	return nil
 end
 
--- Bring all matching items to player, stacked
+-- Bring all matching items to player, stacked with 0.5 stud vertical spacing
 local function bringItems(name)
 	local folder = workspace:FindFirstChild("Items")
 	if not folder then return end
+
+	local basePos = hrp.Position + Vector3.new(0, 3, 0)
+	local heightOffset = 0
 
 	for _, model in folder:GetChildren() do
 		if model:IsA("Model") and model.Name == name then
@@ -50,8 +53,9 @@ local function bringItems(name)
 						part.CanCollide = true
 					end
 				end
-				local spawnPos = hrp.Position + Vector3.new(0, 3, 0)
+				local spawnPos = basePos + Vector3.new(0, heightOffset, 0)
 				model:SetPrimaryPartCFrame(CFrame.new(spawnPos))
+				heightOffset = heightOffset + 0.5
 			end
 		end
 	end
@@ -91,11 +95,11 @@ end
 
 -- Items to bring
 local items = {
-	"Berry", "Bolt", "Broken Fan", "Carrot", "Chair", "Coal", "Coin Stack", "Log", "Item Chest", "Sheet Metal",
-	"Good Sack", "Giant Sack", "Cake", "Old Flashlight", "Strong Flashlight", "Spear", "Morningstar", "Laser Sword",
-	"Leather Body", "Iron Body", "Thorn Body", "Riot Shield", "Revolver", "Alien Armor", "Diamonds", "Laser Cannon",
+	"Bolt", "Broken Fan", "Chair", "Coal", "Coin Stack", "Log", "Sheet Metal",
+	"Good Sack", "Giant Sack", "Cake", "Old Flashlight", "Strong Flashlight", "Spear", 
+	"Leather Body", "Iron Body", "Thorn Body", "Riot Shield", "Revolver",
 	"Fuel Canister", "Oil Barrel", "UFO Junk", "UFO Component", "Broken Radio", "Broken Microwave", "Tyre", "Metal Chair",
-	"Old Car Engine", "Washing Machine", "Cultist Experiment", "Cultist Prototype", "UFO Scrap", "Bunny Foot", "Wolf Pelt",
+	"Washing Machine", "Bunny Foot", "Wolf Pelt",
 	"Alpha Wolf Pelt", "Bear Pelt", "Cultist Gem", "Bandage", "Medkit", "Rifle", "Rifle Ammo", "Revolver Ammo"
 }
 
