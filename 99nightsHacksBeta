@@ -53,8 +53,8 @@ metalButton.Position = UDim2.new(0.094, 0, 0.081, 0)
 metalButton.TextScaled = true
 metalButton.Text = "Open METAL Menu"
 metalButton.Font = Enum.Font.FredokaOne
-metalButton.TextColor3 = Color3.fromRGB(255, 241, 51)
-metalButton.BackgroundColor3 = Color3.fromRGB(109, 195, 77)
+metalButton.TextColor3 = Color3.fromRGB(95, 95, 95)
+metalButton.BackgroundColor3 = Color3.fromRGB(165, 165, 165)
 -----------------------------------------------------------------------
 local metalButtonStroke = Instance.new("UIStroke")
 metalButtonStroke.Parent = metalButton
@@ -98,7 +98,8 @@ metalButton.MouseButton1Click:Connect(function()
 		metalbacjrgorund.ZIndex = 0
 		metalbacjrgorund.Parent = metalFrame 
 		metalbacjrgorund.Image = "rbxassetid://73600094059520"
-		metalbacjrgorund.Transparency = 0.3
+		metalbacjrgorund.Transparency = 1
+		metalbacjrgorund.ImageTransparency = 0.3
 		
 		local titleLabel = Instance.new("TextLabel")
 		titleLabel.Parent = metalFrame
@@ -147,7 +148,7 @@ metalButton.MouseButton1Click:Connect(function()
 		Credits.BackgroundColor3 = Color3.fromRGB(141, 141, 139)
 		Credits.BackgroundTransparency= 1
 		Credits.TextScaled = true
-		Credits.Text = "Credits to Lorikrfx on dc"
+		Credits.Text = "Credits: Lorikrfx on dc"
 		Credits.Font = Enum.Font.FredokaOne
 		Credits.TextColor3 = Color3.fromRGB(88, 133, 255)
 		-----------------------------------------------------------------------
@@ -479,8 +480,8 @@ FuelForFireMenu.Position = UDim2.new(0.098, 0,0.237, 0)
 FuelForFireMenu.TextScaled = true
 FuelForFireMenu.Text = "Open Fuel Menu"
 FuelForFireMenu.Font = Enum.Font.FredokaOne
-FuelForFireMenu.TextColor3 = Color3.fromRGB(255, 82, 160)
-FuelForFireMenu.BackgroundColor3 = Color3.fromRGB(16, 195, 180)
+FuelForFireMenu.TextColor3 = Color3.fromRGB(255, 52, 52)
+FuelForFireMenu.BackgroundColor3 = Color3.fromRGB(226, 122, 53)
 -----------------------------------------------------------------------
 local fuelForFireStroke = Instance.new("UIStroke")
 fuelForFireStroke.Parent = FuelForFireMenu
@@ -500,7 +501,7 @@ fuelforfireCorners.CornerRadius = UDim.new(0, 9)
 -- Store reference to the frame
 local fuelFrame = nil
 
-FuelForFireMenu.MouseButton1Click:Connect(function()
+FuelForFireMenu.MouseButton1Click:Connect(function()----------------------------------------------------------------------------------------------------------------------------------------------
 	if not fuelFrame then
 		-- Only create once
 		fuelFrame = Instance.new("Frame")
@@ -515,19 +516,21 @@ FuelForFireMenu.MouseButton1Click:Connect(function()
 		local metalstroke = Instance.new("UIStroke")
 		metalstroke.Parent = fuelFrame
 		metalstroke.Thickness = 3
+		local BackgroundFuel = Instance.new("ImageLabel")
+		BackgroundFuel.Name = "FuelFrame"
+		BackgroundFuel.Parent = fuelFrame
+		BackgroundFuel.Size = UDim2.new(1, 0, 1, 0)
+		BackgroundFuel.Position = UDim2.new(0.0001, 0, 0.0001, 0)
+		BackgroundFuel.BackgroundColor3 = Color3.fromRGB(83, 101, 115)
+		BackgroundFuel.ImageTransparency = 0.5
+
+		BackgroundFuel.Image = "rbxassetid://93629345963121"
+		BackgroundFuel.Transparency = 1
 	else
 		-- Toggle visibility
 		fuelFrame.Visible = not fuelFrame.Visible
 	end
-	local BackgroundFuel = Instance.new("ImageLabel")
-	BackgroundFuel.Name = "FuelFrame"
-	BackgroundFuel.Parent = fuelFrame
-	BackgroundFuel.Size = UDim2.new(1, 0, 1, 0)
-	BackgroundFuel.Position = UDim2.new(0.0001, 0, 0.0001, 0)
-	BackgroundFuel.BackgroundColor3 = Color3.fromRGB(83, 101, 115)
-	BackgroundFuel.BackgroundTransparency = 0.3
-	BackgroundFuel.Image = "rbxassetid://99274832729578"
-	
+
 	
 	local fueltitle = Instance.new("TextLabel")
 	fueltitle.Parent = fuelFrame
@@ -553,7 +556,7 @@ FuelForFireMenu.MouseButton1Click:Connect(function()
 	Credits.BackgroundColor3 = Color3.fromRGB(141, 141, 139)
 	Credits.BackgroundTransparency= 1
 	Credits.TextScaled = true
-	Credits.Text = "Credits to Lorikrfx on dc"
+	Credits.Text = "Credits: Lorikrfx on dc"
 	Credits.Font = Enum.Font.FredokaOne
 	Credits.TextColor3 = Color3.fromRGB(255, 116, 52)
 	-----------------------------------------------------------------------
@@ -589,7 +592,7 @@ FuelForFireMenu.MouseButton1Click:Connect(function()
 	scrollfuel.Parent = fuelFrame
 	scrollfuel.Size = UDim2.new(0.379, 0, 0.526, 0)
 	scrollfuel.Position = UDim2.new(0.591, 0, 0.377, 0)
-	scrollfuel.BackgroundColor3 = Color3.fromRGB(182, 182, 179)
+	scrollfuel.BackgroundColor3 = Color3.fromRGB(182, 115, 60)
 	scrollfuel.Transparency = 0.3
 
 	-----------------------------------------------------------------------
@@ -625,4 +628,705 @@ FuelForFireMenu.MouseButton1Click:Connect(function()
 	Logcorner2.Parent = fuel1
 	Logcorner2.ApplyStrokeMode = Enum.ApplyStrokeMode.Contextual
 	Logcorner2.Thickness = 3
+	
+	fuel1.MouseButton1Click:Connect(function()
+		for _, model in ipairs(itemsFolder:GetChildren()) do
+			if model:IsA("Model") and model.Name:find("Log") and model.PrimaryPart then
+				model:SetPrimaryPartCFrame(hrp.CFrame + Vector3.new(0, 4 + yOffset, 3))
+
+			end
+		end
+	end)
+	-- Coal
+	local coal = Instance.new("TextButton")
+	coal.Parent = scrollfuel
+	coal.Size = UDim2.new(0.799, 0, 0.065, 0)
+	coal.Position = UDim2.new(0.099, 0, 0.100, 0)
+	coal.BackgroundColor3 = Color3.fromRGB(141, 141, 139)
+	coal.BackgroundTransparency = 0.3
+	coal.TextScaled = true
+	coal.Text = "Coal"
+	coal.Font = Enum.Font.FredokaOne
+	coal.TextColor3 = Color3.fromRGB(255, 162, 48)
+
+	local coalCorner = Instance.new("UICorner", coal)
+	coalCorner.CornerRadius = UDim.new(0, 8)
+
+	local coalStroke1 = Instance.new("UIStroke", coal)
+	coalStroke1.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+	coalStroke1.Thickness = 3
+
+	local coalStroke2 = Instance.new("UIStroke", coal)
+	coalStroke2.ApplyStrokeMode = Enum.ApplyStrokeMode.Contextual
+	coalStroke2.Thickness = 3
+
+	coal.MouseButton1Click:Connect(function()
+		for _, model in ipairs(itemsFolder:GetChildren()) do
+			if model:IsA("Model") and model.Name:find("Coal") and model.PrimaryPart then
+				model:SetPrimaryPartCFrame(hrp.CFrame + Vector3.new(0, 4, 3))
+			end
+		end
+	end)
+
+	-- Chair
+	local chair = coal:Clone()
+	chair.Text = "Chair"
+	chair.Position = UDim2.new(0.099, 0, 0.183, 0)
+	chair.Parent = scrollfuel
+	chair.MouseButton1Click:Connect(function()
+		for _, model in ipairs(itemsFolder:GetChildren()) do
+			if model:IsA("Model") and model.Name:find("Chair") and model.PrimaryPart then
+				model:SetPrimaryPartCFrame(hrp.CFrame + Vector3.new(0, 4, 3))
+			end
+		end
+	end)
+
+	-- Fuel Canister
+	local canister = coal:Clone()
+	canister.Text = "Fuel Canister"
+	canister.Position = UDim2.new(0.099, 0, 0.266, 0)
+	canister.Parent = scrollfuel
+	canister.MouseButton1Click:Connect(function()
+		for _, model in ipairs(itemsFolder:GetChildren()) do
+			if model:IsA("Model") and model.Name:find("Fuel Canister") and model.PrimaryPart then
+				model:SetPrimaryPartCFrame(hrp.CFrame + Vector3.new(0, 4, 3))
+			end
+		end
+	end)
+
+	-- Oil Barrel
+	local oilBarrel = coal:Clone()
+	oilBarrel.Text = "Oil Barrel"
+	oilBarrel.Position = UDim2.new(0.099, 0, 0.349, 0)
+	oilBarrel.Parent = scrollfuel
+	oilBarrel.MouseButton1Click:Connect(function()
+		for _, model in ipairs(itemsFolder:GetChildren()) do
+			if model:IsA("Model") and model.Name:find("Oil Barrel") and model.PrimaryPart then
+				model:SetPrimaryPartCFrame(hrp.CFrame + Vector3.new(0, 4, 3))
+			end
+		end
+	end)
+
+
+end)
+ 
+local FoodMenu = Instance.new("TextButton")
+FoodMenu.Parent = scrollingFrame
+FoodMenu.Size = UDim2.new(0.803, 0, 0.099, 0)
+FoodMenu.Position = UDim2.new(0.098, 0,0.397, 0)
+FoodMenu.TextScaled = true
+FoodMenu.Text = "Open Food Menu"
+FoodMenu.Font = Enum.Font.FredokaOne
+FoodMenu.TextColor3 = Color3.fromRGB(255, 227, 65)
+FoodMenu.BackgroundColor3 = Color3.fromRGB(121, 195, 81)
+-----------------------------------------------------------------------
+local FoodMenuStroke = Instance.new("UIStroke")
+FoodMenuStroke.Parent = FoodMenu
+FoodMenuStroke.Thickness = 3
+FoodMenuStroke.Color = Color3.fromRGB(0, 0, 0)
+-----------------------------------------------------------------------
+local FoodMenuStroke2 = Instance.new("UIStroke")
+FoodMenuStroke2.Parent = FoodMenu
+FoodMenuStroke2.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+FoodMenuStroke2.Thickness = 3
+FoodMenuStroke2.Color = Color3.fromRGB(0, 0, 0)
+-----------------------------------------------------------------------
+local FoodMenucorner = Instance.new("UICorner")
+FoodMenucorner.Parent = FoodMenu
+FoodMenucorner.CornerRadius = UDim.new(0, 9)
+-----------------------------------------------------------------------
+local FoodFrame = nil
+local FoodImageLabel = nil
+
+FoodMenu.MouseButton1Click:Connect(function()
+	if not FoodFrame then
+		-- Only create once
+		FoodFrame = Instance.new("Frame")
+		FoodFrame.Name = "FoodFrame"
+		FoodFrame.Parent = screenGui
+		FoodFrame.Size = UDim2.new(0.379, 0, 0.638, 0)
+		FoodFrame.Position = UDim2.new(0.398, 0, 0.187, 0)
+		FoodFrame.BackgroundColor3 = Color3.fromRGB(83, 101, 115)
+		FoodFrame.BackgroundTransparency = 1
+
+		local metalstroke = Instance.new("UIStroke")
+		metalstroke.Parent = FoodFrame
+		metalstroke.Thickness = 3
+
+		-- Create the image only once
+		FoodImageLabel = Instance.new("ImageLabel")
+		FoodImageLabel.Parent = FoodFrame
+		FoodImageLabel.Size = UDim2.new(1, 0, 1, 0)
+		FoodImageLabel.Position = UDim2.new(0.00001, 0, 0.0001, 0)
+		FoodImageLabel.Image = "rbxassetid://78800815212916"
+		FoodImageLabel.BackgroundTransparency = 1
+		FoodImageLabel.ImageTransparency = 0.5
+		
+		
+	else
+		-- Toggle visibility
+		FoodFrame.Visible = not FoodFrame.Visible
+	end
+
+
+	local FoodTtile = Instance.new("TextLabel")
+	FoodTtile.Parent = FoodFrame
+	FoodTtile.Size = UDim2.new(0.852, 0, 0.225, 0)
+	FoodTtile.Position = UDim2.new(0.077, 0, 0.044, 0)
+	FoodTtile.BackgroundColor3 = Color3.fromRGB(153, 153, 153)
+	FoodTtile.BackgroundTransparency = 1
+	FoodTtile.TextScaled = true
+	FoodTtile.Text = "Hello there, choose what you would like to do !"
+	FoodTtile.Font = Enum.Font.FredokaOne
+	FoodTtile.TextColor3 = Color3.fromRGB(11, 255, 72)
+	FoodTtile.TextStrokeTransparency = 0
+
+	local FoodTtilestroke = Instance.new("UIStroke")
+	FoodTtilestroke.Parent = FoodTtile
+	FoodTtilestroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Contextual
+	FoodTtilestroke.Thickness = 4
+
+	local Credits = Instance.new("TextLabel")
+	Credits.Parent = FoodFrame
+	Credits.Size = UDim2.new(0.525, 0,0.152, 0)
+	Credits.Position = UDim2.new(0.027, 0,0.87, 0)
+	Credits.BackgroundColor3 = Color3.fromRGB(141, 141, 139)
+	Credits.BackgroundTransparency= 1
+	Credits.TextScaled = true
+	Credits.Text = "Credits: Lorikrfx on dc"
+	Credits.Font = Enum.Font.FredokaOne
+	Credits.TextColor3 = Color3.fromRGB(5, 121, 34)
+	-----------------------------------------------------------------------
+
+	-----------------------------------------------------------------------
+	local Creditsstroke = Instance.new("UIStroke")
+	Creditsstroke.Parent = Credits
+	Creditsstroke.Thickness = 3	
+	Creditsstroke.Color = Color3.fromRGB(0, 0, 0)
+	Creditsstroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Contextual
+
+
+	local textsaying = Instance.new("TextLabel")
+	textsaying.Parent = FoodFrame
+	textsaying.Size = UDim2.new(0.525, 0,0.152, 0)
+	textsaying.Position = UDim2.new(0.027, 0,0.45, 0)
+	textsaying.BackgroundColor3 = Color3.fromRGB(141, 141, 139)
+	textsaying.BackgroundTransparency= 1
+	textsaying.TextScaled = true
+	textsaying.Text = "These are the current options we have!"
+	textsaying.Font = Enum.Font.FredokaOne
+	textsaying.TextColor3 = Color3.fromRGB(8, 175, 49)
+	-----------------------------------------------------------------------
+
+	-----------------------------------------------------------------------
+	local sayingstroke = Instance.new("UIStroke")
+	sayingstroke.Parent = textsaying
+	sayingstroke.Thickness = 3	
+	sayingstroke.Color = Color3.fromRGB(0, 0, 0)
+	sayingstroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Contextual
+
+	local scrollFood = Instance.new("ScrollingFrame")
+	scrollFood.Parent = FoodFrame
+	scrollFood.Size = UDim2.new(0.379, 0, 0.526, 0)
+	scrollFood.Position = UDim2.new(0.591, 0, 0.377, 0)
+	scrollFood.BackgroundColor3 = Color3.fromRGB(124, 182, 115)
+	scrollFood.Transparency = 0.3
+
+	-----------------------------------------------------------------------
+	local scrollframeCORNER = Instance.new("UICorner")
+	scrollframeCORNER.Parent = scrollFood
+	scrollframeCORNER.CornerRadius = UDim.new(0, 8)
+
+	local scrollframeSTROKE2 = Instance.new("UIStroke")
+	scrollframeSTROKE2.Parent = scrollFood
+	scrollframeSTROKE2.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+	scrollframeSTROKE2.Thickness = 3
+	----------------------------------------------------------------------------------------------------------------------------------------------
+	local Morsel = Instance.new("TextButton")
+	Morsel.Parent = scrollFood
+	Morsel.Size = UDim2.new(0.799, 0,0.065, 0)
+	Morsel.Position = UDim2.new(0.099, 0,0.017, 0)
+	Morsel.BackgroundColor3 = Color3.fromRGB(141, 141, 139)
+	Morsel.BackgroundTransparency= 0.3
+	Morsel.TextScaled = true
+	Morsel.Text = "Morsel"
+	Morsel.Font = Enum.Font.FredokaOne
+	Morsel.TextColor3 = Color3.fromRGB(61, 255, 116)
+
+	local Logcorner = Instance.new("UICorner")
+	Logcorner.Parent = Morsel
+	Logcorner.CornerRadius = UDim.new(0, 8)
+
+	local Logcorner2 = Instance.new("UIStroke")
+	Logcorner2.Parent = Morsel
+	Logcorner2.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+	Logcorner2.Thickness = 3
+	local Logcorner2 = Instance.new("UIStroke")
+	Logcorner2.Parent = Morsel
+	Logcorner2.ApplyStrokeMode = Enum.ApplyStrokeMode.Contextual
+	Logcorner2.Thickness = 3
+
+	Morsel.MouseButton1Click:Connect(function()
+		for _, model in ipairs(itemsFolder:GetChildren()) do
+			if model:IsA("Model") and model.Name:find("Morsel") and model.PrimaryPart then
+				model:SetPrimaryPartCFrame(hrp.CFrame + Vector3.new(0, 4 + yOffset, 3))
+
+			end
+		end
+	end)
+	-- Coal
+	local Steak = Instance.new("TextButton")
+	Steak.Parent = scrollFood
+	Steak.Size = UDim2.new(0.799, 0, 0.065, 0)
+	Steak.Position = UDim2.new(0.099, 0, 0.100, 0)
+	Steak.BackgroundColor3 = Color3.fromRGB(141, 141, 139)
+	Steak.BackgroundTransparency = 0.3
+	Steak.TextScaled = true
+	Steak.Text = "Steak"
+	Steak.Font = Enum.Font.FredokaOne
+	Steak.TextColor3 = Color3.fromRGB(61, 255, 116)
+
+	local coalCorner = Instance.new("UICorner", Steak)
+	coalCorner.CornerRadius = UDim.new(0, 8)
+
+	local coalStroke1 = Instance.new("UIStroke", Steak)
+	coalStroke1.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+	coalStroke1.Thickness = 3
+
+	local coalStroke2 = Instance.new("UIStroke", Steak)
+	coalStroke2.ApplyStrokeMode = Enum.ApplyStrokeMode.Contextual
+	coalStroke2.Thickness = 3
+
+	Steak.MouseButton1Click:Connect(function()
+		for _, model in ipairs(itemsFolder:GetChildren()) do
+			if model:IsA("Model") and model.Name:find("Steak") and model.PrimaryPart then
+				model:SetPrimaryPartCFrame(hrp.CFrame + Vector3.new(0, 4, 3))
+			end
+		end
+	end)
+
+	-- Chair
+	local Berry = Morsel:Clone()
+	Berry.Text = "Berry"
+	Berry.Position = UDim2.new(0.099, 0, 0.183, 0)
+	Berry.Parent = scrollFood
+	Berry.MouseButton1Click:Connect(function()
+		for _, model in ipairs(itemsFolder:GetChildren()) do
+			if model:IsA("Model") and model.Name:find("Berry") and model.PrimaryPart then
+				model:SetPrimaryPartCFrame(hrp.CFrame + Vector3.new(0, 4, 3))
+			end
+		end
+	end)
+
+	-- Fuel Canister
+	local Carrot = Morsel:Clone()
+	Carrot.Text = "Carrot"
+	Carrot.Position = UDim2.new(0.099, 0, 0.266, 0)
+	Carrot.Parent = scrollFood
+	Carrot.MouseButton1Click:Connect(function()
+		for _, model in ipairs(itemsFolder:GetChildren()) do
+			if model:IsA("Model") and model.Name:find("Carrot") and model.PrimaryPart then
+				model:SetPrimaryPartCFrame(hrp.CFrame + Vector3.new(0, 4, 3))
+			end
+		end
+	end)
+
+	-- Oil Barrel
+	local Stew = Morsel:Clone()
+	Stew.Text = "Stew"
+	Stew.Position = UDim2.new(0.099, 0, 0.349, 0)
+	Stew.Parent = scrollFood
+	Stew.MouseButton1Click:Connect(function()
+		for _, model in ipairs(itemsFolder:GetChildren()) do
+			if model:IsA("Model") and model.Name:find("Stew") and model.PrimaryPart then
+				model:SetPrimaryPartCFrame(hrp.CFrame + Vector3.new(0, 4, 3))
+			end
+		end
+	end)
+	
+	local Cooked_Morsel = Morsel:Clone()
+	Cooked_Morsel.Text = "Cd Morsel"
+	Cooked_Morsel.Position = UDim2.new(0.099, 0, 0.439, 0)
+	Cooked_Morsel.Parent = scrollFood
+	Cooked_Morsel.MouseButton1Click:Connect(function()
+		for _, model in ipairs(itemsFolder:GetChildren()) do
+			if model:IsA("Model") and model.Name:find("Cooked Morsel") and model.PrimaryPart then
+				model:SetPrimaryPartCFrame(hrp.CFrame + Vector3.new(0, 4, 3))
+			end
+		end
+	end)
+	local Cooked_Steak = Morsel:Clone()
+	Cooked_Steak.Text = "Cd Steak" -- cd is cooked
+	Cooked_Steak.Position = UDim2.new(0.099, 0, 0.529, 0)
+	Cooked_Steak.Parent = scrollFood
+	Cooked_Steak.MouseButton1Click:Connect(function()
+		for _, model in ipairs(itemsFolder:GetChildren()) do
+			if model:IsA("Model") and model.Name:find("Cooked Steak") and model.PrimaryPart then
+				model:SetPrimaryPartCFrame(hrp.CFrame + Vector3.new(0, 4, 3))
+			end
+		end
+	end)
+
+	
+end)
+
+
+----------------------------------------------------------------------------------------------------------------------------------------------
+local WeaponMenu = Instance.new("TextButton")
+WeaponMenu.Parent = scrollingFrame
+WeaponMenu.Size = UDim2.new(0.803, 0, 0.099, 0)
+WeaponMenu.Position = UDim2.new(0.098, 0,0.557, 0)
+WeaponMenu.TextScaled = true
+WeaponMenu.Text = "Open Weapon Menu"
+WeaponMenu.Font = Enum.Font.FredokaOne
+WeaponMenu.TextColor3 = Color3.fromRGB(255, 151, 82)
+WeaponMenu.BackgroundColor3 = Color3.fromRGB(195, 94, 54)
+-----------------------------------------------------------------------
+local WeaponMenustroke = Instance.new("UIStroke")
+WeaponMenustroke.Parent = WeaponMenu
+WeaponMenustroke.Thickness = 3
+WeaponMenustroke.Color = Color3.fromRGB(0, 0, 0)
+-----------------------------------------------------------------------
+local WeaponMenustroke2 = Instance.new("UIStroke")
+WeaponMenustroke2.Parent = WeaponMenu
+WeaponMenustroke2.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+WeaponMenustroke2.Thickness = 3
+WeaponMenustroke2.Color = Color3.fromRGB(0, 0, 0)
+-----------------------------------------------------------------------
+local WeaponMenucorner = Instance.new("UICorner")
+WeaponMenucorner.Parent = WeaponMenu
+WeaponMenucorner.CornerRadius = UDim.new(0, 9)
+
+local WeaponFrame = nil
+
+WeaponMenu.MouseButton1Click:Connect(function()
+	if not WeaponFrame then
+		-- Only create once
+		WeaponFrame = Instance.new("Frame")
+		WeaponFrame.Name = "FoodFrame"
+		WeaponFrame.Parent = screenGui
+		WeaponFrame.Size = UDim2.new(0.379, 0, 0.638, 0)
+		WeaponFrame.Position = UDim2.new(0.398, 0, 0.187, 0)
+		WeaponFrame.BackgroundColor3 = Color3.fromRGB(83, 101, 115)
+		WeaponFrame.BackgroundTransparency = 1
+
+
+		local metalstroke = Instance.new("UIStroke")
+		metalstroke.Parent = WeaponFrame
+		metalstroke.Thickness = 3
+		
+		 local WeaponImageLabel = Instance.new("ImageLabel")
+		WeaponImageLabel.Parent = WeaponFrame
+		WeaponImageLabel.Size = UDim2.new(1, 0, 1, 0)
+		WeaponImageLabel.Position = UDim2.new(0.00001, 0, 0.0001, 0)
+		WeaponImageLabel.Image = "rbxassetid://139506143931942"
+		WeaponImageLabel.BackgroundTransparency = 1
+		WeaponImageLabel.ImageTransparency = 0.4
+
+
+	else
+		-- Toggle visibility
+		WeaponFrame.Visible = not WeaponFrame.Visible
+	end
+
+	local WeaponTtile = Instance.new("TextLabel")
+	WeaponTtile.Parent = WeaponFrame
+	WeaponTtile.Size = UDim2.new(0.852, 0, 0.225, 0)
+	WeaponTtile.Position = UDim2.new(0.077, 0, 0.044, 0)
+	WeaponTtile.BackgroundColor3 = Color3.fromRGB(153, 153, 153)
+	WeaponTtile.BackgroundTransparency = 1
+	WeaponTtile.TextScaled = true
+	WeaponTtile.Text = "Hello there, choose what you would like to do !"
+	WeaponTtile.Font = Enum.Font.FredokaOne
+	WeaponTtile.TextColor3 = Color3.fromRGB(255, 28, 28)
+	WeaponTtile.TextStrokeTransparency = 0
+
+	local FoodTtilestroke = Instance.new("UIStroke")
+	FoodTtilestroke.Parent = WeaponTtile
+	FoodTtilestroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Contextual
+	FoodTtilestroke.Thickness = 4
+
+	local Credits = Instance.new("TextLabel")
+	Credits.Parent = WeaponFrame
+	Credits.Size = UDim2.new(0.525, 0,0.152, 0)
+	Credits.Position = UDim2.new(0.027, 0,0.87, 0)
+	Credits.BackgroundColor3 = Color3.fromRGB(141, 141, 139)
+	Credits.BackgroundTransparency= 1
+	Credits.TextScaled = true
+	Credits.Text = "Credits: Lorikrfx on dc"
+	Credits.Font = Enum.Font.FredokaOne
+	Credits.TextColor3 = Color3.fromRGB(121, 11, 11)
+	-----------------------------------------------------------------------
+
+	-----------------------------------------------------------------------
+	local Creditsstroke = Instance.new("UIStroke")
+	Creditsstroke.Parent = Credits
+	Creditsstroke.Thickness = 3	
+	Creditsstroke.Color = Color3.fromRGB(0, 0, 0)
+	Creditsstroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Contextual
+
+
+	local textsaying = Instance.new("TextLabel")
+	textsaying.Parent = WeaponFrame
+	textsaying.Size = UDim2.new(0.525, 0,0.152, 0)
+	textsaying.Position = UDim2.new(0.027, 0,0.45, 0)
+	textsaying.BackgroundColor3 = Color3.fromRGB(141, 141, 139)
+	textsaying.BackgroundTransparency= 1
+	textsaying.TextScaled = true
+	textsaying.Text = "These are the current options we have!"
+	textsaying.Font = Enum.Font.FredokaOne
+	textsaying.TextColor3 = Color3.fromRGB(175, 0, 0)
+	-----------------------------------------------------------------------
+
+	-----------------------------------------------------------------------
+	local sayingstroke = Instance.new("UIStroke")
+	sayingstroke.Parent = textsaying
+	sayingstroke.Thickness = 3	
+	sayingstroke.Color = Color3.fromRGB(0, 0, 0)
+	sayingstroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Contextual
+
+	local scrollFood = Instance.new("ScrollingFrame")
+	scrollFood.Parent = WeaponFrame
+	scrollFood.Size = UDim2.new(0.379, 0, 0.526, 0)
+	scrollFood.Position = UDim2.new(0.591, 0, 0.377, 0)
+	scrollFood.BackgroundColor3 = Color3.fromRGB(182, 63, 48)
+	scrollFood.Transparency = 0.3
+
+	-----------------------------------------------------------------------
+	local scrollframeCORNER = Instance.new("UICorner")
+	scrollframeCORNER.Parent = scrollFood
+	scrollframeCORNER.CornerRadius = UDim.new(0, 8)
+
+	local scrollframeSTROKE2 = Instance.new("UIStroke")
+	scrollframeSTROKE2.Parent = scrollFood
+	scrollframeSTROKE2.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+	scrollframeSTROKE2.Thickness = 3
+	----------------------------------------------------------------------------------------------------------------------------------------------
+	local Morsel = Instance.new("TextButton")
+	Morsel.Parent = scrollFood
+	Morsel.Size = UDim2.new(0.799, 0,0.065, 0)
+	Morsel.Position = UDim2.new(0.099, 0,0.017, 0)
+	Morsel.BackgroundColor3 = Color3.fromRGB(141, 141, 139)
+	Morsel.BackgroundTransparency= 0.3
+	Morsel.TextScaled = true
+	Morsel.Text = "Revolver"
+	Morsel.Font = Enum.Font.FredokaOne
+	Morsel.TextColor3 = Color3.fromRGB(255, 100, 39)
+
+	local Logcorner = Instance.new("UICorner")
+	Logcorner.Parent = Morsel
+	Logcorner.CornerRadius = UDim.new(0, 8)
+
+	local Logcorner2 = Instance.new("UIStroke")
+	Logcorner2.Parent = Morsel
+	Logcorner2.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+	Logcorner2.Thickness = 3
+	local Logcorner2 = Instance.new("UIStroke")
+	Logcorner2.Parent = Morsel
+	Logcorner2.ApplyStrokeMode = Enum.ApplyStrokeMode.Contextual
+	Logcorner2.Thickness = 3
+
+	Morsel.MouseButton1Click:Connect(function()
+		for _, model in ipairs(itemsFolder:GetChildren()) do
+			if model:IsA("Model") and model.Name:find("Revolver") and model.PrimaryPart then
+				model:SetPrimaryPartCFrame(hrp.CFrame + Vector3.new(0, 4 + yOffset, 3))
+
+			end
+		end
+	end)
+	-- Coal
+	local Steak = Morsel:Clone()
+	Steak.Text = "Revolver Ammo"
+	Steak.Position = UDim2.new(0.099, 0, 0.100, 0)
+	Steak.Parent = scrollFood
+	Steak.MouseButton1Click:Connect(function()
+		for _, model in ipairs(itemsFolder:GetChildren()) do
+			if model:IsA("Model") and model.Name:find("Revolver Ammo") and model.PrimaryPart then
+				model:SetPrimaryPartCFrame(hrp.CFrame + Vector3.new(0, 4, 3))
+			end
+		end
+	end)
+
+	-- Chair
+	local Berry = Morsel:Clone()
+	Berry.Text = "Rifle"
+	Berry.Position = UDim2.new(0.099, 0, 0.183, 0)
+	Berry.Parent = scrollFood
+	Berry.MouseButton1Click:Connect(function()
+		for _, model in ipairs(itemsFolder:GetChildren()) do
+			if model:IsA("Model") and model.Name:find("Rifle") and model.PrimaryPart then
+				model:SetPrimaryPartCFrame(hrp.CFrame + Vector3.new(0, 4, 3))
+			end
+		end
+	end)
+
+	-- Fuel Canister (0.099, 0, 0.100, 0)
+	local Carrot = Morsel:Clone()
+	Carrot.Text = "Rifle Ammo"
+	Carrot.Position = UDim2.new(0.099, 0, 0.266, 0)
+	Carrot.Parent = scrollFood
+	Carrot.MouseButton1Click:Connect(function()
+		for _, model in ipairs(itemsFolder:GetChildren()) do
+			if model:IsA("Model") and model.Name:find("Rifle Ammo") and model.PrimaryPart then
+				model:SetPrimaryPartCFrame(hrp.CFrame + Vector3.new(0, 4, 3))
+			end
+		end
+	end)
+
+	-- Oil Barrel
+	local Stew = Morsel:Clone()
+	Stew.Text = "Bandage"
+	Stew.Position = UDim2.new(0.099, 0, 0.349, 0)
+	Stew.Parent = scrollFood
+	Stew.MouseButton1Click:Connect(function()
+		for _, model in ipairs(itemsFolder:GetChildren()) do
+			if model:IsA("Model") and model.Name:find("Bandage") and model.PrimaryPart then
+				model:SetPrimaryPartCFrame(hrp.CFrame + Vector3.new(0, 4, 3))
+			end
+		end
+	end)
+
+	local Cooked_Morsel = Morsel:Clone()
+	Cooked_Morsel.Text = "Medkit"
+	Cooked_Morsel.Position = UDim2.new(0.099, 0, 0.439, 0)
+	Cooked_Morsel.Parent = scrollFood
+	Cooked_Morsel.MouseButton1Click:Connect(function()
+		for _, model in ipairs(itemsFolder:GetChildren()) do
+			if model:IsA("Model") and model.Name:find("Medkit") and model.PrimaryPart then
+				model:SetPrimaryPartCFrame(hrp.CFrame + Vector3.new(0, 4, 3))
+			end
+		end
+	end)
+end)
+
+----------------------------------------------------------------------------------------------------------------------------------------------
+local PlayerBuffs = Instance.new("TextButton")
+PlayerBuffs.Parent = scrollingFrame
+PlayerBuffs.Size = UDim2.new(0.803, 0, 0.099, 0)
+PlayerBuffs.Position = UDim2.new(0.098, 0,0.727, 0)
+PlayerBuffs.TextScaled = true
+PlayerBuffs.Text = "Open Player Menu"
+PlayerBuffs.Font = Enum.Font.FredokaOne
+PlayerBuffs.TextColor3 = Color3.fromRGB(134, 233, 255)
+PlayerBuffs.BackgroundColor3 = Color3.fromRGB(75, 103, 195)
+-----------------------------------------------------------------------
+local PlayerBuffsstroke = Instance.new("UIStroke")
+PlayerBuffsstroke.Parent = PlayerBuffs
+PlayerBuffsstroke.Thickness = 3
+PlayerBuffsstroke.Color = Color3.fromRGB(0, 0, 0)
+-----------------------------------------------------------------------
+local PlayerBuffsstroke2 = Instance.new("UIStroke")
+PlayerBuffsstroke2.Parent = PlayerBuffs
+PlayerBuffsstroke2.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+PlayerBuffsstroke2.Thickness = 3
+PlayerBuffsstroke2.Color = Color3.fromRGB(0, 0, 0)
+-----------------------------------------------------------------------
+local PlayerBuffscorner = Instance.new("UICorner")
+PlayerBuffscorner.Parent = PlayerBuffs
+PlayerBuffscorner.CornerRadius = UDim.new(0, 9)
+
+local PlayerBuffsFrame = nil
+
+PlayerBuffs.MouseButton1Click:Connect(function()
+	if not PlayerBuffsFrame then
+		-- Only create once
+		PlayerBuffsFrame = Instance.new("Frame")
+		PlayerBuffsFrame.Name = "PlayerBuffsFrame"
+		PlayerBuffsFrame.Parent = screenGui
+		PlayerBuffsFrame.Size = UDim2.new(0.379, 0, 0.638, 0)
+		PlayerBuffsFrame.Position = UDim2.new(0.398, 0, 0.187, 0)
+		PlayerBuffsFrame.BackgroundColor3 = Color3.fromRGB(83, 101, 115)
+		PlayerBuffsFrame.BackgroundTransparency = 1
+
+
+		local metalstroke = Instance.new("UIStroke")
+		metalstroke.Parent = PlayerBuffsFrame
+		metalstroke.Thickness = 3
+		
+		
+		local WeaponImageLabel = Instance.new("ImageLabel")
+		WeaponImageLabel.Parent = PlayerBuffsFrame
+		WeaponImageLabel.Size = UDim2.new(1, 0, 1, 0)
+		WeaponImageLabel.Position = UDim2.new(0.00001, 0, 0.0001, 0)
+		WeaponImageLabel.Image = "rbxassetid://71529489681545"
+		WeaponImageLabel.BackgroundTransparency = 1
+		WeaponImageLabel.ImageTransparency = 0.4
+	else
+		-- Toggle visibility
+		PlayerBuffsFrame.Visible = not PlayerBuffsFrame.Visible
+	end
+	local PlayerTtile = Instance.new("TextLabel")
+	PlayerTtile.Parent = PlayerBuffsFrame
+	PlayerTtile.Size = UDim2.new(0.852, 0, 0.225, 0)
+	PlayerTtile.Position = UDim2.new(0.077, 0, 0.044, 0)
+	PlayerTtile.BackgroundColor3 = Color3.fromRGB(153, 153, 153)
+	PlayerTtile.BackgroundTransparency = 1
+	PlayerTtile.TextScaled = true
+	PlayerTtile.Text = "Hello there, choose what you would like to do !"
+	PlayerTtile.Font = Enum.Font.FredokaOne
+	PlayerTtile.TextColor3 = Color3.fromRGB(43, 206, 255)
+	PlayerTtile.TextStrokeTransparency = 0
+
+	local FoodTtilestroke = Instance.new("UIStroke")
+	FoodTtilestroke.Parent = PlayerTtile
+	FoodTtilestroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Contextual
+	FoodTtilestroke.Thickness = 4
+
+	local Credits = Instance.new("TextLabel")
+	Credits.Parent = PlayerBuffsFrame
+	Credits.Size = UDim2.new(0.525, 0,0.152, 0)
+	Credits.Position = UDim2.new(0.027, 0,0.87, 0)
+	Credits.BackgroundColor3 = Color3.fromRGB(141, 141, 139)
+	Credits.BackgroundTransparency= 1
+	Credits.TextScaled = true
+	Credits.Text = "Credits: Lorikrfx on dc"
+	Credits.Font = Enum.Font.FredokaOne
+	Credits.TextColor3 = Color3.fromRGB(10, 119, 121)
+	-----------------------------------------------------------------------
+
+	-----------------------------------------------------------------------
+	local Creditsstroke = Instance.new("UIStroke")
+	Creditsstroke.Parent = Credits
+	Creditsstroke.Thickness = 3	
+	Creditsstroke.Color = Color3.fromRGB(0, 0, 0)
+	Creditsstroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Contextual
+
+
+	local textsaying = Instance.new("TextLabel")
+	textsaying.Parent = PlayerBuffsFrame
+	textsaying.Size = UDim2.new(0.525, 0,0.152, 0)
+	textsaying.Position = UDim2.new(0.0001, 0,0.45, 0)
+	textsaying.BackgroundColor3 = Color3.fromRGB(141, 141, 139)
+	textsaying.BackgroundTransparency= 1
+	textsaying.TextScaled = true
+	textsaying.Text = "These are the current options we have!"
+	textsaying.Font = Enum.Font.FredokaOne
+	textsaying.TextColor3 = Color3.fromRGB(27, 217, 182)
+	
+	
+	local textstoke = Instance.new("UIStroke")
+	textstoke.Parent = textsaying
+	textstoke.Thickness = 3
+	textstoke.Color = Color3.fromRGB(0, 0, 0)
+	textstoke.ApplyStrokeMode = Enum.ApplyStrokeMode.Contextual
+
+	local ScrollPower = Instance.new("ScrollingFrame")
+	ScrollPower.Parent = PlayerBuffsFrame
+	ScrollPower.Size = UDim2.new(0.390, 0, 0.606, 0)
+	ScrollPower.Position = UDim2.new(0.581, 0, 0.357, 0)
+	ScrollPower.BackgroundColor3 = Color3.fromRGB(33, 180, 182)
+	ScrollPower.Transparency = 0.3
+
+	-----------------------------------------------------------------------
+	local scrollframeCORNER = Instance.new("UICorner")
+	scrollframeCORNER.Parent = ScrollPower
+	scrollframeCORNER.CornerRadius = UDim.new(0, 8)
+
+	local scrollframeSTROKE2 = Instance.new("UIStroke")
+	scrollframeSTROKE2.Parent = ScrollPower
+	scrollframeSTROKE2.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+	scrollframeSTROKE2.Thickness = 3
+	
+	
+
 end)
