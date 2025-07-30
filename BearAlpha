@@ -14,7 +14,7 @@ local GOtoCOINS = Instance.new("TextButton")
 GOtoCOINS.Parent = screengui
 GOtoCOINS.Size = UDim2.new(0.177, 0, 0.116, 0)
 GOtoCOINS.Position = UDim2.new(0.149, 0, 0.42, 0)
-GOtoCOINS.Text = "Start chickrn Loop"
+GOtoCOINS.Text = "Start KOE Loop"
 GOtoCOINS.TextScaled = true
 
 -- Create the close button
@@ -35,7 +35,7 @@ closebutton.MouseButton1Click:Connect(function()
 end)
 
 local teleportPoints = {
-	Vector3.new(-59, 23, -30.6),
+	Vector3.new(59, 23, -35.6),
 	Vector3.new ( 20, 30 , 0 ) 
 }
 
