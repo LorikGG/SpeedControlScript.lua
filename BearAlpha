@@ -1,0 +1,59 @@
+local player = game.Players.LocalPlayer
+local players = game.Players
+
+-- Safely get the HumanoidRootPart
+local character = player.Character or player.CharacterAdded:Wait()
+local humanoidrootpart = character:WaitForChild("HumanoidRootPart")
+
+-- Create the GUI
+local screengui = Instance.new("ScreenGui")
+screengui.Parent = player:WaitForChild("PlayerGui")
+
+-- Create the teleport button
+local GOtoCOINS = Instance.new("TextButton")
+GOtoCOINS.Parent = screengui
+GOtoCOINS.Size = UDim2.new(0.177, 0, 0.116, 0)
+GOtoCOINS.Position = UDim2.new(0.149, 0, 0.42, 0)
+GOtoCOINS.Text = "Start Teleport Loop"
+GOtoCOINS.TextScaled = true
+
+-- Create the close button
+local closebutton = Instance.new("TextButton")
+closebutton.Parent = screengui
+closebutton.Position = UDim2.new(0.4, 0, 0.1, 0)
+closebutton.Size = UDim2.new(0.094, 0, 0.094, 0)
+closebutton.Text = "Close UI"
+closebutton.TextScaled = true
+
+-- Track visibility state
+local isUIVisible = true
+local isTeleporting = false -- loop control flag
+
+closebutton.MouseButton1Click:Connect(function()
+	isUIVisible = not isUIVisible
+	GOtoCOINS.Visible = isUIVisible
+end)
+
+local teleportPoints = {
+	Vector3.new(-407, 28, -27.5),
+	
+}
+
+-- Teleport loop logic
+GOtoCOINS.MouseButton1Click:Connect(function()
+	isTeleporting = not isTeleporting
+
+	if isTeleporting then
+		GOtoCOINS.Text = "Stop Teleport Loop"
+		while isTeleporting do
+			for _, pos in ipairs(teleportPoints) do
+				if not isTeleporting then break end
+				humanoidrootpart.CFrame = CFrame.new(pos)
+				wait(0.5)
+			end
+		end
+		GOtoCOINS.Text = "Start Teleport Loop"
+	else
+		GOtoCOINS.Text = "Start Teleport Loop"
+	end
+end)
