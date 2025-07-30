@@ -35,7 +35,7 @@ closebutton.MouseButton1Click:Connect(function()
 end)
 
 local teleportPoints = {
-	Vector3.new(-407, 28, -27.5),
+	Vector3.new(-149, 13, -16.6),
 	
 }
 
