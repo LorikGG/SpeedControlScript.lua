@@ -22,7 +22,7 @@ local closebutton = Instance.new("TextButton")
 closebutton.Parent = screengui
 closebutton.Position = UDim2.new(0.4, 0, 0.1, 0)
 closebutton.Size = UDim2.new(0.094, 0, 0.094, 0)
-closebutton.Text = "Close UI"
+closebutton.Text = "Close ui coind"
 closebutton.TextScaled = true
 
 -- Track visibility state
@@ -35,7 +35,7 @@ closebutton.MouseButton1Click:Connect(function()
 end)
 
 local teleportPoints = {
-	Vector3.new(49, 13, -16.6),
+	Vector3.new(49, 13, 20.6),
 	
 }
 
