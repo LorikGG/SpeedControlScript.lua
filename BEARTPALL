@@ -1,15 +1,20 @@
 local lorikdakip = game.Players.LocalPlayer
 local players = game.Players
-
--- Safely get the HumanoidRootPart
 local character = lorikdakip.Character or lorikdakip.CharacterAdded:Wait()
 local humanoidrootpart = character:WaitForChild("HumanoidRootPart")
 
--- Create the GUI
+-- Get cheese parts safely
+local cheeseFolder = game.Workspace:WaitForChild("FindCheese")
+local cheeses = {
+	cheeseFolder:WaitForChild("CheeseAdd1"),
+	cheeseFolder:WaitForChild("CheeseAdd2"),
+}
+
+-- GUI setup
 local screengui = Instance.new("ScreenGui")
 screengui.Parent = lorikdakip:WaitForChild("PlayerGui")
 
--- Create the teleport button
+-- Button: Start Teleport to Players Loop
 local GOtoCOINS = Instance.new("TextButton")
 GOtoCOINS.Parent = screengui
 GOtoCOINS.Size = UDim2.new(0.277, 0, 0.116, 0)
@@ -17,7 +22,15 @@ GOtoCOINS.Position = UDim2.new(0.149, 0, 0.42, 0)
 GOtoCOINS.Text = "Start Teleport Loop"
 GOtoCOINS.TextScaled = true
 
--- Create the close button
+-- Button: Teleport to Cheese every 3 sec
+local cheeseButton = Instance.new("TextButton")
+cheeseButton.Parent = screengui
+cheeseButton.Size = UDim2.new(0.277, 0, 0.116, 0)
+cheeseButton.Position = UDim2.new(0.149, 0, 0.55, 0)
+cheeseButton.Text = "Start Cheese Loop"
+cheeseButton.TextScaled = true
+
+-- Button: Toggle UI
 local closebutton = Instance.new("TextButton")
 closebutton.Parent = screengui
 closebutton.Position = UDim2.new(0.4, 0, 0.1, 0)
@@ -25,18 +38,19 @@ closebutton.Size = UDim2.new(0.094, 0, 0.094, 0)
 closebutton.Text = "Close UI"
 closebutton.TextScaled = true
 
--- Track visibility state
 local isUIVisible = true
 local isTeleporting = false
+local isCheeseLooping = false
 
--- Toggle UI visibility
+-- Toggle UI
 closebutton.MouseButton1Click:Connect(function()
 	isUIVisible = not isUIVisible
 	GOtoCOINS.Visible = isUIVisible
+	cheeseButton.Visible = isUIVisible
 	closebutton.Text = isUIVisible and "Close UI" or "Open UI"
 end)
 
--- Teleport Loop Logic
+-- Loop: Teleport to other players
 GOtoCOINS.MouseButton1Click:Connect(function()
 	isTeleporting = not isTeleporting
 	GOtoCOINS.Text = isTeleporting and "Stop Teleport Loop" or "Start Teleport Loop"
@@ -48,5 +62,19 @@ GOtoCOINS.MouseButton1Click:Connect(function()
 				wait(0.5)
 			end
 		end
+	end
+end)
+
+-- Loop: Teleport to Cheese every 3 seconds
+cheeseButton.MouseButton1Click:Connect(function()
+	isCheeseLooping = not isCheeseLooping
+	cheeseButton.Text = isCheeseLooping and "Stop Cheese Loop" or "Start Cheese Loop"
+
+	while isCheeseLooping do
+		local randomCheese = cheeses[math.random(1, #cheeses)]
+		if randomCheese then
+			humanoidrootpart.CFrame = randomCheese.CFrame + Vector3.new(0, 3, 0)
+		end
+		wait(3)
 	end
 end)
