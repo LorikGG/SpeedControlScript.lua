@@ -3,12 +3,17 @@ local players = game.Players
 local character = lorikdakip.Character or lorikdakip.CharacterAdded:Wait()
 local humanoidrootpart = character:WaitForChild("HumanoidRootPart")
 
--- Get cheese parts safely
+-- Get cheese models safely
 local cheeseFolder = game.Workspace:WaitForChild("FindCheese")
-local cheeses = {
-	cheeseFolder:WaitForChild("CheeseAdd1"),
-	cheeseFolder:WaitForChild("CheeseAdd2"),
-}
+local function getCheeseModels()
+	local cheeseModels = {}
+	for _, child in ipairs(cheeseFolder:GetChildren()) do
+		if child:IsA("Model") then
+			table.insert(cheeseModels, child)
+		end
+	end
+	return cheeseModels
+end
 
 -- GUI setup
 local screengui = Instance.new("ScreenGui")
@@ -65,15 +70,19 @@ GOtoCOINS.MouseButton1Click:Connect(function()
 	end
 end)
 
--- Loop: Teleport to Cheese every 3 seconds
+-- Loop: Teleport to random cheese model every 3 seconds
 cheeseButton.MouseButton1Click:Connect(function()
 	isCheeseLooping = not isCheeseLooping
 	cheeseButton.Text = isCheeseLooping and "Stop Cheese Loop" or "Start Cheese Loop"
 
 	while isCheeseLooping do
-		local randomCheese = cheeses[math.random(1, #cheeses)]
-		if randomCheese then
-			humanoidrootpart.CFrame = randomCheese.CFrame + Vector3.new(0, 3, 0)
+		local cheeseModels = getCheeseModels()
+		if #cheeseModels > 0 then
+			local randomCheese = cheeseModels[math.random(1, #cheeseModels)]
+			local targetPart = randomCheese.PrimaryPart or randomCheese:FindFirstChildWhichIsA("BasePart")
+			if targetPart then
+				humanoidrootpart.CFrame = targetPart.CFrame + Vector3.new(0, 3, 0)
+			end
 		end
 		wait(3)
 	end
