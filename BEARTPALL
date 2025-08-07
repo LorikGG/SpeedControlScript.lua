@@ -7,15 +7,13 @@ local humanoidrootpart = character:WaitForChild("HumanoidRootPart")
 local screengui = Instance.new("ScreenGui")
 screengui.Parent = lorikdakip:WaitForChild("PlayerGui")
 
--- Button: Start Teleport to Players Loop
+-- Button: Start/Stop Teleport Loop
 local GOtoCOINS = Instance.new("TextButton")
 GOtoCOINS.Parent = screengui
 GOtoCOINS.Size = UDim2.new(0.277, 0, 0.116, 0)
 GOtoCOINS.Position = UDim2.new(0.149, 0, 0.42, 0)
 GOtoCOINS.Text = "Start Teleport Loop"
 GOtoCOINS.TextScaled = true
-
-
 
 -- Button: Toggle UI
 local closebutton = Instance.new("TextButton")
@@ -25,21 +23,34 @@ closebutton.Size = UDim2.new(0.094, 0, 0.094, 0)
 closebutton.Text = "Close UI"
 closebutton.TextScaled = true
 
+-- Toggle state
 local isUIVisible = true
-local isTeleporting = true
+local isTeleporting = false
 
--- Loop: Teleport to other players
-GOtoCOINS.MouseButton1Click:Connect(function()
-	isTeleporting = not isTeleporting
-	GOtoCOINS.Text = isTeleporting and "Stop Teleport Loop" or "Start Teleport Loop"
-
-	while isTeleporting do
-		for _, player in ipairs(players:GetPlayers()) do
-			if player ~= lorikdakip and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
-				humanoidrootpart.CFrame = player.Character.HumanoidRootPart.CFrame + Vector3.new(0, 1, 0)
-				wait(0.5)
+-- Teleport Loop
+task.spawn(function()
+	while true do
+		if isTeleporting then
+			for _, player in ipairs(players:GetPlayers()) do
+				if player ~= lorikdakip and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+					humanoidrootpart.CFrame = player.Character.HumanoidRootPart.CFrame + Vector3.new(0, 1, 0)
+					wait(0.5)
+				end
 			end
+		else
+			wait(0.1) -- prevent high CPU usage when idle
 		end
 	end
 end)
 
+-- Start/Stop button logic
+GOtoCOINS.MouseButton1Click:Connect(function()
+	isTeleporting = not isTeleporting
+	GOtoCOINS.Text = isTeleporting and "Stop Teleport Loop" or "Start Teleport Loop"
+end)
+
+-- Close UI logic
+closebutton.MouseButton1Click:Connect(function()
+	isUIVisible = not isUIVisible
+	screengui.Enabled = isUIVisible
+end)
