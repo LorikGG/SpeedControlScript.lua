@@ -1,78 +1,55 @@
+-- LocalScript inside StarterPlayerScripts
+
 local player = game.Players.LocalPlayer
-local players = game.Players
+local playerGui = player:WaitForChild("PlayerGui")
+local replicatedStorage = game:GetService("ReplicatedStorage")
 
--- Safely get the HumanoidRootPart
-local character = player.Character or player.CharacterAdded:Wait()
-local humanoidrootpart = character:WaitForChild("HumanoidRootPart")
+-- Create main ScreenGui
+local screenGui = Instance.new("ScreenGui")
+screenGui.Parent = playerGui
 
--- Create the GUI
-local screengui = Instance.new("ScreenGui")
-screengui.Parent = player:WaitForChild("PlayerGui")
+-- Utility function to create buttons
+local function createButton(text, position, callback)
+    local button = Instance.new("TextButton")
+    button.Size = UDim2.new(0, 220, 0, 50)
+    button.Position = position
+    button.Text = text
+    button.Parent = screenGui
+    button.BackgroundColor3 = Color3.fromRGB(255, 200, 0)
+    button.TextScaled = true
+    button.MouseButton1Click:Connect(callback)
+    return button
+end
 
--- Create the teleport button
-local GOtoCOINS = Instance.new("TextButton")
-GOtoCOINS.Parent = screengui
-GOtoCOINS.Size = UDim2.new(0.177, 0, 0.116, 0)
-GOtoCOINS.Position = UDim2.new(0.149, 0, 0.42, 0)
-GOtoCOINS.Text = "Start Teleport Loop"
-GOtoCOINS.TextScaled = true
+-- Button: Spawn KingPig
+createButton("Spawn KingPig", UDim2.new(0.5, -110, 0.7, 0), function()
+    local kingPigModel = replicatedStorage:FindFirstChild("Assets")
+        and replicatedStorage.Assets:FindFirstChild("Models")
+        and replicatedStorage.Assets.Models:FindFirstChild("PetAssets")
+        and replicatedStorage.Assets.Models.PetAssets:FindFirstChild("KingPig")
 
--- Create the close button
-local closebutton = Instance.new("TextButton")
-closebutton.Parent = screengui
-closebutton.Position = UDim2.new(0.4, 0, 0.1, 0)
-closebutton.Size = UDim2.new(0.094, 0, 0.094, 0)
-closebutton.Text = "Close UI"
-closebutton.TextScaled = true
-
--- Track visibility state
-local isUIVisible = true
-local isTeleporting = false -- loop control flag
-
-closebutton.MouseButton1Click:Connect(function()
-	isUIVisible = not isUIVisible
-	GOtoCOINS.Visible = isUIVisible
+    if kingPigModel then
+        local clonedPig = kingPigModel:Clone()
+        clonedPig.Parent = player.Backpack
+        print("KingPig added to Backpack!")
+    else
+        warn("KingPig not found in ReplicatedStorage!")
+    end
 end)
 
-local teleportPoints = {
-	Vector3.new(-20.5, 85, 487),
-	Vector3.new(53.5, 72, 165),
-	Vector3.new(-211, 72, 277),
-	Vector3.new(95.5, 70, 189),
-	Vector3.new(-47.5, 85, 527),
-	Vector3.new(15.5, 85, 493),
-	Vector3.new(3.5, 86, 538),
-	Vector3.new(-74.5, 70, 178),
-	Vector3.new(-78.5, 72, 328),
-	Vector3.new(68.5, 70, 328),
-	Vector3.new(-166, 70, 213),
-	Vector3.new(-66.5, 85, 466),
-	Vector3.new(-70.5, 70, 163),
-	Vector3.new(-94.5, 71, 194),
-	Vector3.new(-94.5, 71, 341),
-	Vector3.new(-57.5, 70, 343),
-	Vector3.new(86.5, 72, 325),
-	Vector3.new(50.5, 70, 341),
-	Vector3.new(272.5, 90, 346),
-	Vector3.new(230.5, 90, 259),
-	Vector3.new(0, 150, 0)
-}
+-- Button: Spawn Rainbow Poop (13000 kg)
+createButton("Spawn Rainbow Poop", UDim2.new(0.5, -110, 0.8, 0), function()
+    local poopModel = replicatedStorage:FindFirstChild("Assets")
+        and replicatedStorage.Assets:FindFirstChild("Models")
+        and replicatedStorage.Assets.Models:FindFirstChild("PoopAssets")
+        and replicatedStorage.Assets.Models.PoopAssets:FindFirstChild("Snake Poop")
 
--- Teleport loop logic
-GOtoCOINS.MouseButton1Click:Connect(function()
-	isTeleporting = not isTeleporting
-
-	if isTeleporting then
-		GOtoCOINS.Text = "Stop Teleport Loop"
-		while isTeleporting do
-			for _, pos in ipairs(teleportPoints) do
-				if not isTeleporting then break end
-				humanoidrootpart.CFrame = CFrame.new(pos)
-				wait(0.5)
-			end
-		end
-		GOtoCOINS.Text = "Start Teleport Loop"
-	else
-		GOtoCOINS.Text = "Start Teleport Loop"
-	end
+    if poopModel then
+        local clonedPoop = poopModel:Clone()
+        clonedPoop.Name = "Snake Poop (1300Kg) [Rainbow]"
+        clonedPoop.Parent = player.Backpack
+        print("Rainbow Poop added to Backpack!")
+    else
+        warn("Rainbow Poop model not found in ReplicatedStorage!")
+    end
 end)
