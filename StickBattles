@@ -42,14 +42,14 @@ createButton("Spawn Rainbow Poop", UDim2.new(0.5, -110, 0.8, 0), function()
     local poopModel = replicatedStorage:FindFirstChild("Assets")
         and replicatedStorage.Assets:FindFirstChild("Models")
         and replicatedStorage.Assets.Models:FindFirstChild("PoopAssets")
-        and replicatedStorage.Assets.Models.PoopAssets:FindFirstChild("Snake Poop")
+        and replicatedStorage.Assets.Models.PoopAssets:FindFirstChild("Snake Poop [Rainbow]")
 
     if poopModel then
         local clonedPoop = poopModel:Clone()
-        clonedPoop.Name = "Snake Poop (1300Kg) [Rainbow]"
+        clonedPoop.Name = "Rainbow Poop [13000 kg]"
         clonedPoop.Parent = player.Backpack
         print("Rainbow Poop added to Backpack!")
     else
-        warn("Rainbow Poop model not found in ReplicatedStorage!")
+        warn("Snake Poop [Rainbow] model not found in ReplicatedStorage!")
     end
 end)
