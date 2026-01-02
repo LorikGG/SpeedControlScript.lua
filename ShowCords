@@ -1,0 +1,29 @@
+-- Create ScreenGui
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "CoordsDisplay"
+screenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+
+-- Create TextLabel
+local label = Instance.new("TextLabel")
+label.Size = UDim2.new(1, 0, 0, 40)
+label.Position = UDim2.new(0, 0, 0, 0)
+label.BackgroundTransparency = 1
+label.TextColor3 = Color3.new(1, 1, 1)
+label.TextStrokeTransparency = 0.5
+label.Font = Enum.Font.SourceSansBold
+label.TextSize = 24
+label.Parent = screenGui
+
+-- Update loop
+local player = game.Players.LocalPlayer
+local runService = game:GetService("RunService")
+
+runService.RenderStepped:Connect(function()
+    local char = player.Character
+    local root = char and char:FindFirstChild("HumanoidRootPart")
+
+    if root then
+        local pos = root.Position
+        label.Text = string.format("X: %.1f   Y: %.1f   Z: %.1f", pos.X, pos.Y, pos.Z)
+    end
+end)
