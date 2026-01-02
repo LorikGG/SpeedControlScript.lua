@@ -1,0 +1,72 @@
+-- Create ScreenGui
+local gui = Instance.new("ScreenGui")
+gui.Name = "TeleportUI"
+gui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+
+-- Main frame
+local frame = Instance.new("Frame")
+frame.Size = UDim2.new(0, 250, 0, 150)
+frame.Position = UDim2.new(0, 20, 0, 100)
+frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+frame.BorderSizePixel = 0
+frame.Parent = gui
+
+-- UI Corner
+local corner = Instance.new("UICorner")
+corner.CornerRadius = UDim.new(0, 10)
+corner.Parent = frame
+
+-- Create textboxes for X, Y, Z
+local function createBox(name, posY)
+    local box = Instance.new("TextBox")
+    box.Size = UDim2.new(0, 200, 0, 30)
+    box.Position = UDim2.new(0, 25, 0, posY)
+    box.PlaceholderText = name
+    box.Text = ""
+    box.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+    box.TextColor3 = Color3.new(1, 1, 1)
+    box.Parent = frame
+
+    local c = Instance.new("UICorner")
+    c.CornerRadius = UDim.new(0, 6)
+    c.Parent = box
+
+    return box
+end
+
+local xBox = createBox("X", 10)
+local yBox = createBox("Y", 50)
+local zBox = createBox("Z", 90)
+
+-- Teleport button
+local button = Instance.new("TextButton")
+button.Size = UDim2.new(0, 200, 0, 30)
+button.Position = UDim2.new(0, 25, 0, 130)
+button.Text = "Teleport"
+button.BackgroundColor3 = Color3.fromRGB(0, 120, 255)
+button.TextColor3 = Color3.new(1, 1, 1)
+button.Parent = frame
+
+local bc = Instance.new("UICorner")
+bc.CornerRadius = UDim.new(0, 6)
+bc.Parent = button
+
+-- Teleport logic
+local player = game.Players.LocalPlayer
+
+button.MouseButton1Click:Connect(function()
+    local char = player.Character
+    local root = char and char:FindFirstChild("HumanoidRootPart")
+
+    if root then
+        local x = tonumber(xBox.Text)
+        local y = tonumber(yBox.Text)
+        local z = tonumber(zBox.Text)
+
+        if x and y and z then
+            root.CFrame = CFrame.new(x, y, z)
+        else
+            warn("Invalid coordinates entered")
+        end
+    end
+end)
