@@ -1,9 +1,7 @@
--- Create ScreenGui
 local gui = Instance.new("ScreenGui")
 gui.Name = "ItemCounterUI"
 gui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
 
--- Create label
 local label = Instance.new("TextLabel")
 label.Size = UDim2.new(0, 250, 0, 40)
 label.Position = UDim2.new(0, 20, 0, 20)
@@ -20,14 +18,24 @@ local corner = Instance.new("UICorner")
 corner.CornerRadius = UDim.new(0, 8)
 corner.Parent = label
 
--- Folder reference
 local folder = workspace:WaitForChild("Items")
 
--- Update loop
+-- Only count REAL items
+local function countRealItems()
+    local count = 0
+
+    for _, obj in ipairs(folder:GetChildren()) do
+        if obj:IsA("Model") or obj:IsA("Part") or obj:IsA("MeshPart") then
+            count += 1
+        end
+    end
+
+    return count
+end
+
 task.spawn(function()
     while true do
-        local count = #folder:GetChildren()
-        label.Text = "Items in folder: " .. count
-        task.wait(0.1)
+        label.Text = "Items in folder: " .. countRealItems()
+        task.wait(0.5)
     end
 end)
