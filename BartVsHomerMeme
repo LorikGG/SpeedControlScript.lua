@@ -1,0 +1,55 @@
+-- // CONFIG
+local floatKey = Enum.KeyCode.F      -- toets om rustig rond te zweven
+local flyUpKey = Enum.KeyCode.G      -- toets om omhoog te vliegen
+
+local speed = 10                     -- horizontale zweefsnelheid
+local spinSpeed = 2                  -- rotatiesnelheid
+local verticalSpeed = 8              -- snelheid omhoog
+
+-- // SERVICES
+local UIS = game:GetService("UserInputService")
+local RunService = game:GetService("RunService")
+local player = game.Players.LocalPlayer
+local char = player.Character or player.CharacterAdded:Wait()
+local hrp = char:WaitForChild("HumanoidRootPart")
+
+-- // STATES
+local floating = false
+local flyingUp = false
+
+-- // FLOAT MODE (smooth rondzweven)
+UIS.InputBegan:Connect(function(input, gp)
+    if gp then return end
+    if input.KeyCode == floatKey then
+        floating = not floating
+    end
+end)
+
+-- // FLY UP MODE (smooth Y-as omhoog)
+UIS.InputBegan:Connect(function(input, gp)
+    if gp then return end
+    if input.KeyCode == flyUpKey then
+        flyingUp = not flyingUp
+    end
+end)
+
+-- // MAIN MOVEMENT LOOP
+RunService.RenderStepped:Connect(function(dt)
+    if floating then
+        -- zachte horizontale beweging + spin
+        local t = tick()
+        local offset = Vector3.new(
+            math.sin(t) * speed,
+            0,
+            math.cos(t) * speed
+        ) * dt
+
+        hrp.CFrame = hrp.CFrame * CFrame.Angles(0, spinSpeed * dt, 0)
+        hrp.CFrame = hrp.CFrame + offset
+    end
+
+    if flyingUp then
+        -- rustig omhoog langs Y-as
+        hrp.CFrame = hrp.CFrame + Vector3.new(0, verticalSpeed * dt, 0)
+    end
+end)
