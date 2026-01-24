@@ -18,7 +18,7 @@ end)
 
 -- // SETTINGS
 local spinSpeed = 2          -- rotatiesnelheid
-local flySpeed = 0.5         -- lagere snelheid voor rustiger vliegen (0.5 studs per seconde omhoog)
+local flySpeed = 0.5         -- snelheid voor rustiger vliegen (0.5 studs per seconde omhoog)
 
 -- // STATES
 local spinning = false
@@ -35,16 +35,16 @@ local spinButton = Instance.new("TextButton")
 spinButton.Size = UDim2.new(0, 150, 0, 40)
 spinButton.Position = UDim2.new(0, 20, 0, 200)
 spinButton.Text = "Spin"
-spinButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-spinButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+spinButton.BackgroundColor3 = Color3.fromRGB(0, 150, 255)  -- Blauw
+spinButton.TextColor3 = Color3.fromRGB(255, 255, 255)     -- Wit
 spinButton.Parent = screenGui
 
 local flyButton = Instance.new("TextButton")
 flyButton.Size = UDim2.new(0, 150, 0, 40)
 flyButton.Position = UDim2.new(0, 20, 0, 250)
 flyButton.Text = "Fly"
-flyButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-flyButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+flyButton.BackgroundColor3 = Color3.fromRGB(0, 150, 255)  -- Blauw
+flyButton.TextColor3 = Color3.fromRGB(255, 255, 255)     -- Wit
 flyButton.Parent = screenGui
 
 -- // BUTTON LOGIC
@@ -58,13 +58,13 @@ flyButton.MouseButton1Click:Connect(function()
 	flyButton.Text = flying and "Stop Flying" or "Fly"
 
 	if flying then
-		-- Zet PlatformStand aan voor rustiger vliegen (voorkomt conflicten met lopen)
+		-- Zet PlatformStand aan voor rustiger vliegen
 		hum.PlatformStand = true
-		-- Maak BodyVelocity voor rustige fly omhoog
+		-- Maak BodyVelocity voor rustige fly omhoog, met MaxForce op alle assen voor stabiliteit
 		if not flyBody or flyBody.Parent ~= hrp then
 			flyBody = Instance.new("BodyVelocity")
 			flyBody.Name = "FlyUpVelocity"
-			flyBody.MaxForce = Vector3.new(0, math.huge, 0)
+			flyBody.MaxForce = Vector3.new(math.huge, math.huge, math.huge)  -- Alle assen voor betere controle
 			flyBody.Velocity = Vector3.new(0, flySpeed, 0)
 			flyBody.Parent = hrp
 		else
