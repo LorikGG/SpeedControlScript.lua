@@ -18,7 +18,7 @@ end)
 
 -- // SETTINGS
 local spinSpeed = 2          -- rotatiesnelheid
-local flySpeed = 1           -- 1 stud per seconde omhoog
+local flySpeed = 0.5         -- lagere snelheid voor rustiger vliegen (0.5 studs per seconde omhoog)
 
 -- // STATES
 local spinning = false
@@ -58,7 +58,9 @@ flyButton.MouseButton1Click:Connect(function()
 	flyButton.Text = flying and "Stop Flying" or "Fly"
 
 	if flying then
-		-- maak BodyVelocity voor rustige fly omhoog
+		-- Zet PlatformStand aan voor rustiger vliegen (voorkomt conflicten met lopen)
+		hum.PlatformStand = true
+		-- Maak BodyVelocity voor rustige fly omhoog
 		if not flyBody or flyBody.Parent ~= hrp then
 			flyBody = Instance.new("BodyVelocity")
 			flyBody.Name = "FlyUpVelocity"
@@ -69,6 +71,8 @@ flyButton.MouseButton1Click:Connect(function()
 			flyBody.Velocity = Vector3.new(0, flySpeed, 0)
 		end
 	else
+		-- Zet PlatformStand uit
+		hum.PlatformStand = false
 		if flyBody then
 			flyBody:Destroy()
 			flyBody = nil
@@ -80,7 +84,7 @@ end)
 RunService.RenderStepped:Connect(function(dt)
 	if not hrp or not hrp.Parent then return end
 
-	-- spin blijft zoals jij hem nice vond
+	-- Spin blijft zoals jij hem nice vond
 	if spinning then
 		hrp.CFrame = hrp.CFrame * CFrame.Angles(0, spinSpeed * dt, 0)
 	end
