@@ -1,55 +1,87 @@
--- // CONFIG
-local floatKey = Enum.KeyCode.F      -- toets om rustig rond te zweven
-local flyUpKey = Enum.KeyCode.G      -- toets om omhoog te vliegen
-
-local speed = 10                     -- horizontale zweefsnelheid
-local spinSpeed = 2                  -- rotatiesnelheid
-local verticalSpeed = 8              -- snelheid omhoog
-
 -- // SERVICES
-local UIS = game:GetService("UserInputService")
+local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
-local player = game.Players.LocalPlayer
-local char = player.Character or player.CharacterAdded:Wait()
-local hrp = char:WaitForChild("HumanoidRootPart")
+
+local player = Players.LocalPlayer
+local function getCharacter()
+	local char = player.Character or player.CharacterAdded:Wait()
+	local hrp = char:WaitForChild("HumanoidRootPart")
+	local hum = char:WaitForChild("Humanoid")
+	return char, hrp, hum
+end
+
+local char, hrp, hum = getCharacter()
+
+player.CharacterAdded:Connect(function()
+	char, hrp, hum = getCharacter()
+end)
+
+-- // SETTINGS
+local spinSpeed = 2          -- rotatiesnelheid
+local flySpeed = 1           -- 1 stud per seconde omhoog
 
 -- // STATES
-local floating = false
-local flyingUp = false
+local spinning = false
+local flying = false
+local flyBody -- BodyVelocity voor fly
 
--- // FLOAT MODE (smooth rondzweven)
-UIS.InputBegan:Connect(function(input, gp)
-    if gp then return end
-    if input.KeyCode == floatKey then
-        floating = not floating
-    end
+-- // GUI
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "FlySpinGui"
+screenGui.ResetOnSpawn = false
+screenGui.Parent = player:WaitForChild("PlayerGui")
+
+local spinButton = Instance.new("TextButton")
+spinButton.Size = UDim2.new(0, 150, 0, 40)
+spinButton.Position = UDim2.new(0, 20, 0, 200)
+spinButton.Text = "Spin"
+spinButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+spinButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+spinButton.Parent = screenGui
+
+local flyButton = Instance.new("TextButton")
+flyButton.Size = UDim2.new(0, 150, 0, 40)
+flyButton.Position = UDim2.new(0, 20, 0, 250)
+flyButton.Text = "Fly"
+flyButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+flyButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+flyButton.Parent = screenGui
+
+-- // BUTTON LOGIC
+spinButton.MouseButton1Click:Connect(function()
+	spinning = not spinning
+	spinButton.Text = spinning and "Stop Spinning" or "Spin"
 end)
 
--- // FLY UP MODE (smooth Y-as omhoog)
-UIS.InputBegan:Connect(function(input, gp)
-    if gp then return end
-    if input.KeyCode == flyUpKey then
-        flyingUp = not flyingUp
-    end
+flyButton.MouseButton1Click:Connect(function()
+	flying = not flying
+	flyButton.Text = flying and "Stop Flying" or "Fly"
+
+	if flying then
+		-- maak BodyVelocity voor rustige fly omhoog
+		if not flyBody or flyBody.Parent ~= hrp then
+			flyBody = Instance.new("BodyVelocity")
+			flyBody.Name = "FlyUpVelocity"
+			flyBody.MaxForce = Vector3.new(0, math.huge, 0)
+			flyBody.Velocity = Vector3.new(0, flySpeed, 0)
+			flyBody.Parent = hrp
+		else
+			flyBody.Velocity = Vector3.new(0, flySpeed, 0)
+		end
+	else
+		if flyBody then
+			flyBody:Destroy()
+			flyBody = nil
+		end
+	end
 end)
 
--- // MAIN MOVEMENT LOOP
+-- // MAIN LOOP
 RunService.RenderStepped:Connect(function(dt)
-    if floating then
-        -- zachte horizontale beweging + spin
-        local t = tick()
-        local offset = Vector3.new(
-            math.sin(t) * speed,
-            0,
-            math.cos(t) * speed
-        ) * dt
+	if not hrp or not hrp.Parent then return end
 
-        hrp.CFrame = hrp.CFrame * CFrame.Angles(0, spinSpeed * dt, 0)
-        hrp.CFrame = hrp.CFrame + offset
-    end
-
-    if flyingUp then
-        -- rustig omhoog langs Y-as
-        hrp.CFrame = hrp.CFrame + Vector3.new(0, verticalSpeed * dt, 0)
-    end
+	-- spin blijft zoals jij hem nice vond
+	if spinning then
+		hrp.CFrame = hrp.CFrame * CFrame.Angles(0, spinSpeed * dt, 0)
+	end
 end)
