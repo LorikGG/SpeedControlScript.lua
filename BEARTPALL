@@ -34,7 +34,7 @@ task.spawn(function()
 			for _, player in ipairs(players:GetPlayers()) do
 				if player ~= lorikdakip and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
 					humanoidrootpart.CFrame = player.Character.HumanoidRootPart.CFrame + Vector3.new(0, 1, 0)
-					wait(0.5)
+					wait(0.2)
 				end
 			end
 		else
