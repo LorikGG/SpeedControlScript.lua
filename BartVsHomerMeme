@@ -18,7 +18,7 @@ end)
 
 -- // SETTINGS
 local spinSpeed = 2          -- rotatiesnelheid
-local flySpeed = 0.5         -- snelheid voor rustiger vliegen (0.5 studs per seconde omhoog)
+local flySpeed = 1         -- snelheid voor rustiger vliegen (0.5 studs per seconde omhoog)
 
 -- // STATES
 local spinning = false
