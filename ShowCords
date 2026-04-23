@@ -2,28 +2,67 @@
 local screenGui = Instance.new("ScreenGui")
 screenGui.Name = "CoordsDisplay"
 screenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+screenGui.ResetOnSpawn = false -- stays after death
 
 -- Create TextLabel
 local label = Instance.new("TextLabel")
-label.Size = UDim2.new(1, 0, 0, 40)
-label.Position = UDim2.new(0, 0, 0, 0)
-label.BackgroundTransparency = 1
+label.Size = UDim2.new(0, 250, 0, 40)
+label.Position = UDim2.new(0, 20, 0, 20)
+label.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+label.BackgroundTransparency = 0.5
 label.TextColor3 = Color3.new(1, 1, 1)
 label.TextStrokeTransparency = 0.5
 label.Font = Enum.Font.SourceSansBold
-label.TextSize = 24
+label.TextSize = 22
+label.Active = true
+label.Draggable = true -- PC drag
 label.Parent = screenGui
+
+-- Round corners
+local corner = Instance.new("UICorner")
+corner.CornerRadius = UDim.new(0, 8)
+corner.Parent = label
+
+-- Mobile drag support
+local UIS = game:GetService("UserInputService")
+local dragging, dragStart, startPos
+
+local function enableMobileDrag(object)
+	object.InputBegan:Connect(function(input)
+		if input.UserInputType == Enum.UserInputType.Touch then
+			dragging = object
+			dragStart = input.Position
+			startPos = object.Position
+		end
+	end)
+
+	object.InputChanged:Connect(function(input)
+		if dragging == object and input.UserInputType == Enum.UserInputType.Touch then
+			local delta = input.Position - dragStart
+			object.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X,
+				startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+		end
+	end)
+
+	UIS.InputEnded:Connect(function(input)
+		if input.UserInputType == Enum.UserInputType.Touch then
+			dragging = nil
+		end
+	end)
+end
+
+enableMobileDrag(label)
 
 -- Update loop
 local player = game.Players.LocalPlayer
 local runService = game:GetService("RunService")
 
 runService.RenderStepped:Connect(function()
-    local char = player.Character
-    local root = char and char:FindFirstChild("HumanoidRootPart")
+	local char = player.Character
+	local root = char and char:FindFirstChild("HumanoidRootPart")
 
-    if root then
-        local pos = root.Position
-        label.Text = string.format("X: %.1f   Y: %.1f   Z: %.1f", pos.X, pos.Y, pos.Z)
-    end
+	if root then
+		local pos = root.Position
+		label.Text = string.format("X: %.1f   Y: %.1f   Z: %.1f", pos.X, pos.Y, pos.Z)
+	end
 end)
