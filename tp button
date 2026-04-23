@@ -2,19 +2,90 @@
 local gui = Instance.new("ScreenGui")
 gui.Name = "TeleportUI"
 gui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+gui.ResetOnSpawn = false
 
 -- Main frame
 local frame = Instance.new("Frame")
-frame.Size = UDim2.new(0, 250, 0, 150)
+frame.Size = UDim2.new(0, 250, 0, 170)
 frame.Position = UDim2.new(0, 20, 0, 100)
 frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 frame.BorderSizePixel = 0
+frame.Active = true
+frame.Draggable = true
 frame.Parent = gui
+
+-- Mobile drag support for main frame
+local UIS = game:GetService("UserInputService")
+local dragging, dragStart, startPos
+
+local function enableMobileDrag(object)
+    object.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.Touch then
+            dragging = object
+            dragStart = input.Position
+            startPos = object.Position
+        end
+    end)
+
+    object.InputChanged:Connect(function(input)
+        if dragging == object and input.UserInputType == Enum.UserInputType.Touch then
+            local delta = input.Position - dragStart
+            object.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X,
+                startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+        end
+    end)
+
+    UIS.InputEnded:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.Touch then
+            dragging = nil
+        end
+    end)
+end
+
+enableMobileDrag(frame)
 
 -- UI Corner
 local corner = Instance.new("UICorner")
 corner.CornerRadius = UDim.new(0, 10)
 corner.Parent = frame
+
+-- Close button
+local closeBtn = Instance.new("TextButton")
+closeBtn.Size = UDim2.new(0, 25, 0, 25)
+closeBtn.Position = UDim2.new(1, -30, 0, 5)
+closeBtn.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
+closeBtn.Text = "X"
+closeBtn.TextColor3 = Color3.new(1, 1, 1)
+closeBtn.Parent = frame
+
+local cbCorner = Instance.new("UICorner")
+cbCorner.CornerRadius = UDim.new(0, 6)
+cbCorner.Parent = closeBtn
+
+closeBtn.MouseButton1Click:Connect(function()
+    frame.Visible = false
+end)
+
+-- Open button (draggable)
+local openBtn = Instance.new("TextButton")
+openBtn.Size = UDim2.new(0, 80, 0, 30)
+openBtn.Position = UDim2.new(0, 20, 0, 60)
+openBtn.BackgroundColor3 = Color3.fromRGB(0, 120, 255)
+openBtn.Text = "Open UI"
+openBtn.TextColor3 = Color3.new(1, 1, 1)
+openBtn.Active = true
+openBtn.Draggable = true
+openBtn.Parent = gui
+
+local obCorner = Instance.new("UICorner")
+obCorner.CornerRadius = UDim.new(0, 6)
+obCorner.Parent = openBtn
+
+enableMobileDrag(openBtn)
+
+openBtn.MouseButton1Click:Connect(function()
+    frame.Visible = true
+end)
 
 -- Create textboxes for X, Y, Z
 local function createBox(name, posY)
