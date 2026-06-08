@@ -1,0 +1,104 @@
+---------------------------------------------------------------------
+-- SERVICES
+---------------------------------------------------------------------
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local TeleportService = game:GetService("TeleportService")
+
+local player = Players.LocalPlayer
+local backpack = player:WaitForChild("Backpack")
+local char = player.Character or player.CharacterAdded:Wait()
+
+-- Pas dit aan naar jouw remote pad:
+local TradeRemote = ReplicatedStorage:WaitForChild("Events")
+    :WaitForChild("BabyCats")
+    :WaitForChild("Trade")
+
+---------------------------------------------------------------------
+-- TELEPORT BUTTON (OPTIONEEL)
+---------------------------------------------------------------------
+local tpGui = Instance.new("ScreenGui")
+tpGui.Name = "TPGui"
+tpGui.ResetOnSpawn = false
+tpGui.Parent = player:WaitForChild("PlayerGui")
+
+local tpButton = Instance.new("TextButton")
+tpButton.Name = "TPButton"
+tpButton.Parent = tpGui
+tpButton.Size = UDim2.new(0, 150, 0, 50)
+tpButton.Position = UDim2.new(0.5, -75, 0.7, 0)
+tpButton.BackgroundColor3 = Color3.fromRGB(0, 170, 255)
+tpButton.Text = "TP me"
+tpButton.TextScaled = true
+tpButton.BorderSizePixel = 0
+
+local PLACE_ID = 103881829323430
+
+tpButton.MouseButton1Click:Connect(function()
+    TeleportService:Teleport(PLACE_ID, player)
+end)
+
+---------------------------------------------------------------------
+-- RAINBOW TRADE GUI
+---------------------------------------------------------------------
+local gui = Instance.new("ScreenGui")
+gui.Name = "RainbowTradeGUI"
+gui.IgnoreGuiInset = true
+gui.ResetOnSpawn = false
+gui.Parent = player:WaitForChild("PlayerGui")
+
+local frame = Instance.new("Frame")
+frame.Size = UDim2.new(0, 220, 0, 120)
+frame.Position = UDim2.new(0.5, -110, 0.5, -60)
+frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+frame.Active = true
+frame.Draggable = true
+frame.Parent = gui
+
+local title = Instance.new("TextLabel")
+title.Size = UDim2.new(1, 0, 0, 30)
+title.Position = UDim2.new(0, 0, 0, 0)
+title.BackgroundTransparency = 1
+title.Text = "RAINBOW TRADE"
+title.TextColor3 = Color3.fromRGB(255, 255, 0)
+title.TextScaled = true
+title.Parent = frame
+
+local tradeBtn = Instance.new("TextButton")
+tradeBtn.Size = UDim2.new(1, -20, 0, 50)
+tradeBtn.Position = UDim2.new(0, 10, 0, 50)
+tradeBtn.Text = "START TRADE"
+tradeBtn.BackgroundColor3 = Color3.fromRGB(0, 170, 255)
+tradeBtn.TextColor3 = Color3.new(1, 1, 1)
+tradeBtn.TextScaled = true
+tradeBtn.Parent = frame
+
+---------------------------------------------------------------------
+-- FUNCTIONS
+---------------------------------------------------------------------
+local function equipAllRainbowChickens()
+    for _, item in ipairs(backpack:GetChildren()) do
+        if item.Name == "Chicken [Rainbow]" then
+            item.Parent = char
+        end
+    end
+end
+
+local function spamTrade(times, delay)
+    times = times or 70
+    delay = delay or 0.01
+
+    for i = 1, times do
+        TradeRemote:InvokeServer()
+        task.wait(delay)
+    end
+end
+
+---------------------------------------------------------------------
+-- BUTTON LOGIC
+---------------------------------------------------------------------
+tradeBtn.MouseButton1Click:Connect(function()
+    equipAllRainbowChickens()
+    task.wait(0.01)
+    spamTrade(70, 0.01)
+end)
